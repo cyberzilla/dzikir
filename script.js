@@ -15,6 +15,7 @@ let initialTranslatePx = 0;
 async function initApp() {
     startClock();
     checkAndResetDailyProgress();
+    registerServiceWorker(); // Mendaftarkan PWA
 
     try {
         const response = await fetch('dzikir.json');
@@ -220,7 +221,6 @@ function updateUI() {
         }
     });
 
-    // Menyesuaikan tinggi kontainer persis dengan kartu yang aktif
     const activeCard = cards[currentSlideIndex];
     if (activeCard) {
         track.style.height = (activeCard.offsetHeight + 120) + 'px';
@@ -237,18 +237,16 @@ function updateUI() {
     if (isEndScreen) {
         progressTextEl.innerHTML = `<span>STATUS</span> <span>SELESAI</span>`;
         document.getElementById('btn-counter').style.visibility = 'hidden';
-        bottomSheet.style.display = 'none'; // Sembunyikan panel di halaman akhir
+        bottomSheet.style.display = 'none';
     } else {
         progressTextEl.innerHTML = `<span>DZIKIR ${currentSlideIndex + 1} DARI ${currentSessionData.length}</span> <span>${Math.round(progressPercent)}%</span>`;
         document.getElementById('btn-counter').style.visibility = 'visible';
-        bottomSheet.style.display = 'flex'; // Tampilkan kembali panel
+        bottomSheet.style.display = 'flex';
 
-        // Isi data Dalil & Referensi ke dalam Bottom Sheet
         const activeItem = currentSessionData[currentSlideIndex];
         document.getElementById('sheet-dalil').innerText = activeItem.dalil || 'Tidak ada catatan spesifik.';
         document.getElementById('sheet-ref').innerHTML = `<em>${activeItem.referensi}</em>`;
 
-        // Tutup panel otomatis saat berganti halaman dzikir
         bottomSheet.classList.remove('expanded');
 
         updateFAB();
@@ -382,6 +380,19 @@ function setupSheetDrag() {
     dragArea.addEventListener('touchstart', onStartSheet, { passive: true });
     document.addEventListener('touchmove', onMoveSheet, { passive: false });
     document.addEventListener('touchend', onEndSheet);
+}
+
+// 12. Pendaftaran Service Worker untuk PWA
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then(function(registration) {
+                console.log('Service Worker berhasil didaftarkan dengan scope:', registration.scope);
+            })
+            .catch(function(error) {
+                console.log('Pendaftaran Service Worker gagal:', error);
+            });
+    }
 }
 
 // Listener global agar tinggi selalu update saat layar diputar/di-resize
