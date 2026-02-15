@@ -103,10 +103,11 @@ function restoreState() {
             track.style.transition = 'none';
             updateUI();
 
+            // Memaksa browser menerapkan kalkulasi tata letak (Forced Reflow)
+            void track.offsetWidth;
+
             // Nyalakan kembali animasi CSS setelah proses melompat ke memori selesai
-            setTimeout(() => {
-                track.style.transition = ''; // Ini mengembalikan kontrol animasi ke file style.css
-            }, 50);
+            track.style.transition = '';
         }
     }
 }
@@ -134,9 +135,11 @@ function openDzikir(session) {
     updateUI();
     window.scrollTo(0, 0);
 
-    setTimeout(() => {
-        track.style.transition = ''; // Kembalikan animasi ke kontrol CSS
-    }, 50);
+    // Memaksa browser menerapkan kalkulasi tata letak (Forced Reflow)
+    void track.offsetWidth;
+
+    // Kembalikan animasi ke kontrol CSS
+    track.style.transition = '';
 }
 
 function closeDzikir() {
@@ -388,8 +391,6 @@ function incrementCounter() {
 function nextSlide() {
     if (currentSlideIndex < currentSessionData.length) {
         currentSlideIndex++;
-        // Pastikan transisi tidak terkunci oleh apapun
-        document.getElementById('slider-track').style.transition = '';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -398,7 +399,6 @@ function nextSlide() {
 function prevSlide() {
     if (currentSlideIndex > 0) {
         currentSlideIndex--;
-        document.getElementById('slider-track').style.transition = '';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
