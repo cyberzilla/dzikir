@@ -90,18 +90,16 @@ function restoreState() {
     const savedSlide = localStorage.getItem('dzikir_current_slide');
 
     if (savedSession) {
-        // Buka sesi yang tersimpan tanpa memicu animasi transisi awal
         openDzikir(savedSession);
 
         if (savedSlide !== null) {
             currentSlideIndex = parseInt(savedSlide, 10);
 
-            // Validasi keamanan agar index tidak melebihi batas array
             if (currentSlideIndex > currentSessionData.length) {
                 currentSlideIndex = currentSessionData.length;
             }
 
-            // Matikan transisi sejenak agar UI langsung melompat ke kartu terakhir tanpa terlihat bergeser
+            // Matikan transisi sejenak agar UI langsung melompat tanpa terlihat bergeser
             const track = document.getElementById('slider-track');
             track.style.transition = 'none';
             updateUI();
@@ -135,7 +133,6 @@ function closeDzikir() {
     document.body.className = '';
     document.getElementById('bottom-sheet').classList.remove('expanded');
 
-    // Hapus state karena user sengaja kembali ke home / menutup sesi
     localStorage.removeItem('dzikir_active_session');
     localStorage.removeItem('dzikir_current_slide');
     activeSession = '';
@@ -317,7 +314,6 @@ function updateUI() {
     document.getElementById('btn-prev').disabled = currentSlideIndex === 0;
     document.getElementById('btn-next').disabled = isEndScreen;
 
-    // Simpan posisi saat ini ke LocalStorage setiap kali UI diperbarui
     if (activeSession) {
         localStorage.setItem('dzikir_active_session', activeSession);
         localStorage.setItem('dzikir_current_slide', currentSlideIndex);
@@ -377,6 +373,8 @@ function incrementCounter() {
 function nextSlide() {
     if (currentSlideIndex < currentSessionData.length) {
         currentSlideIndex++;
+        // FIX BUG: Memaksa transisi aktif saat klik tombol (mengatasi error transisi=none dari restoreState)
+        document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -385,6 +383,8 @@ function nextSlide() {
 function prevSlide() {
     if (currentSlideIndex > 0) {
         currentSlideIndex--;
+        // FIX BUG: Memaksa transisi aktif saat klik tombol
+        document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
