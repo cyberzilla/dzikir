@@ -69,7 +69,6 @@ function checkAndResetDailyProgress() {
     const savedProgress = localStorage.getItem('dzikir_progress');
 
     if (savedDate !== today) {
-        // Jika hari berganti, reset semua progres dan hapus state posisi terakhir
         userProgress = { pagi: {}, petang: {} };
         localStorage.setItem('dzikir_last_date', today);
         localStorage.removeItem('dzikir_active_session');
@@ -103,6 +102,12 @@ function restoreState() {
             const track = document.getElementById('slider-track');
             track.style.transition = 'none';
             updateUI();
+
+            // MENGATASI BUG ANIMASI SLIDE SAAT REFRESH:
+            // Tunggu 50ms setelah render selesai, lalu nyalakan kembali fungsi transisi CSS
+            setTimeout(() => {
+                track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
+            }, 50);
         }
     }
 }
@@ -373,8 +378,6 @@ function incrementCounter() {
 function nextSlide() {
     if (currentSlideIndex < currentSessionData.length) {
         currentSlideIndex++;
-        // FIX BUG: Memaksa transisi aktif saat klik tombol (mengatasi error transisi=none dari restoreState)
-        document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -383,8 +386,6 @@ function nextSlide() {
 function prevSlide() {
     if (currentSlideIndex > 0) {
         currentSlideIndex--;
-        // FIX BUG: Memaksa transisi aktif saat klik tombol
-        document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -413,10 +414,11 @@ function setupSheetDrag() {
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
 
-        let transformY = isExpanded ? diff : (sheet.offsetHeight - 35) + diff;
+        // Perhitungan Tinggi diubah menjadi 50 menyesuaikan ukuran CSS baru
+        let transformY = isExpanded ? diff : (sheet.offsetHeight - 50) + diff;
 
         if (transformY < 0) transformY = 0;
-        if (transformY > sheet.offsetHeight - 35) transformY = sheet.offsetHeight - 35;
+        if (transformY > sheet.offsetHeight - 50) transformY = sheet.offsetHeight - 50;
 
         sheet.style.transform = `translateY(${transformY}px)`;
     };
@@ -429,7 +431,9 @@ function setupSheetDrag() {
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
 
-        if (Math.abs(diff) < 5) {
+        // MENGATASI BUG KLIK: Toleransi pergeseran diubah dari 5 ke 15 piksel.
+        // Jadi meski jari sedikit meleset saat klik, panel tetap mau terbuka.
+        if (Math.abs(diff) < 15) {
             sheet.classList.toggle('expanded');
         } else {
             if (isExpanded && diff > 50) {
