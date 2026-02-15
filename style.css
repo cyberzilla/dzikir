@@ -1,0 +1,448 @@
+/* =========================================
+   CSS VARIABLES & TEMA DASAR
+   ========================================= */
+:root {
+    --bg-body: #e2e8f0;
+    --bg-app: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --primary: #0ea5e9;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --nav-bg: rgba(255, 255, 255, 0.95);
+}
+
+body.theme-pagi {
+    --bg-app: #fdf8f6;
+    --text-main: #27272a;
+    --text-muted: #71717a;
+    --primary: #ea580c;
+    --card-bg: #ffffff;
+    --border-color: #ffedd5;
+    --nav-bg: rgba(255, 255, 255, 0.95);
+}
+
+body.theme-petang {
+    --bg-app: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #3b82f6;
+    --card-bg: #1e293b;
+    --border-color: #334155;
+    --nav-bg: rgba(30, 41, 59, 0.95);
+}
+
+/* =========================================
+   GLOBAL & LAYOUTING
+   ========================================= */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-body);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    color: var(--text-main);
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background-color: var(--bg-app);
+    position: relative;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.4s ease;
+}
+
+.view-screen {
+    display: none;
+    width: 100%;
+    animation: fadeIn 0.4s ease;
+}
+
+.view-screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   VIEW 1: HOME DASHBOARD
+   ========================================= */
+#home-view {
+    padding: 40px 25px;
+    box-sizing: border-box;
+}
+
+.header-home {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.greeting {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+}
+
+.date-time {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.clock {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 15px 0;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+.big-btn {
+    width: 100%;
+    border: none;
+    border-radius: 24px;
+    padding: 30px 25px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.big-btn:active {
+    transform: scale(0.95);
+}
+
+.btn-pagi {
+    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    color: white;
+    box-shadow: 0 15px 30px rgba(234, 88, 12, 0.25);
+}
+
+.btn-petang {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+    color: white;
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.25);
+}
+
+.btn-icon {
+    font-size: 3rem;
+    margin-right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.btn-text {
+    text-align: left;
+}
+
+.btn-text h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.btn-text p {
+    margin: 0;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* =========================================
+   VIEW 2: STICKY PROGRESS AREA
+   ========================================= */
+.sticky-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dzikir-header {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.back-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 5px;
+    position: absolute;
+    left: 15px;
+}
+
+.dzikir-header h1 {
+    margin: 0;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-main);
+}
+
+.progress-container {
+    padding: 0 25px 15px;
+}
+
+.progress-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+}
+
+.progress-bar {
+    height: 5px;
+    background-color: var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary);
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+/* =========================================
+   SLIDER AREA & CARDS
+   ========================================= */
+.slider-viewport {
+    width: 100%;
+    overflow: hidden;
+    padding-top: 20px;
+}
+
+.slider-track {
+    display: flex;
+    width: 100%;
+    will-change: transform;
+    touch-action: pan-y;
+    cursor: grab;
+    align-items: flex-start; /* FIX BUG: Mencegah efek stretch otomatis */
+}
+
+.slider-track:active {
+    cursor: grabbing;
+}
+
+.slide-card {
+    flex: 0 0 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    opacity: 0.4;
+    transform: scale(0.92);
+    transition: all 0.4s ease;
+    margin-bottom: 150px; /* Menjaga jarak aman dengan Bottom Nav */
+}
+
+.slide-card.active-slide {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.card-content {
+    background: var(--card-bg);
+    border-radius: 28px;
+    padding: 35px 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    border: 1px solid var(--border-color);
+    user-select: none;
+}
+
+.dzikir-title {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin: 0 0 30px 0;
+    text-align: center;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 15px;
+    font-weight: 700;
+}
+
+.read-count-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.arabic {
+    font-family: 'Amiri', serif;
+    font-size: 2.4rem;
+    text-align: right;
+    line-height: 2.5;
+    color: var(--text-main);
+    margin-bottom: 35px;
+    direction: rtl;
+}
+
+.section-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--primary);
+    background: rgba(14, 165, 233, 0.1);
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+body.theme-pagi .section-label { background: rgba(234, 88, 12, 0.1); }
+body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
+
+.latin-text, .translation-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.latin-text {
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.ref-box {
+    background-color: var(--bg-app);
+    padding: 18px;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+/* =========================================
+   BOTTOM NAVIGATION & COUNTER FAB
+   ========================================= */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 480px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px 35px;
+    box-sizing: border-box;
+    z-index: 110;
+}
+
+.nav-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+}
+
+.counter-fab {
+    background: var(--primary);
+    color: white;
+    border: none;
+    height: 65px;
+    min-width: 160px;
+    border-radius: 35px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* EFEK TEKAN PADA BUTTON (Active Press) */
+.counter-fab:active {
+    transform: scale(0.92);
+    filter: brightness(0.9);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.counter-fab.done {
+    background: var(--text-muted);
+    box-shadow: none;
+    cursor: default;
+}
+
+.counter-fab .count-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+/* =========================================
+   ANIMASI & LAYAR SUKSES
+   ========================================= */
+@keyframes popSuccess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.pop-anim {
+    animation: popSuccess 0.4s ease forwards;
+}
+
+.success-screen {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.success-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    display: inline-block;
+    animation: popSuccess 0.6s ease forwards;
+}
