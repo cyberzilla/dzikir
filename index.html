@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pagar Harian Muslim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================
+           CSS VARIABLES & TEMA DASAR
+           ========================================= */
+        :root {
+            --bg-body: #e2e8f0;
+            --bg-app: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #0ea5e9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body.theme-pagi {
+            --bg-app: #fdf8f6;
+            --text-main: #27272a;
+            --text-muted: #71717a;
+            --primary: #ea580c;
+            --card-bg: #ffffff;
+            --border-color: #ffedd5;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body.theme-petang {
+            --bg-app: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --nav-bg: rgba(30, 41, 59, 0.95);
+        }
+
+        /* =========================================
+           GLOBAL & LAYOUTING
+           ========================================= */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            color: var(--text-main);
+            overflow-x: hidden;
+            scrollbar-width: none; 
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background-color: var(--bg-app);
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.4s ease;
+        }
+
+        .view-screen {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .view-screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           VIEW 1: HOME DASHBOARD
+           ========================================= */
+        #home-view {
+            padding: 40px 25px;
+            box-sizing: border-box;
+        }
+
+        .header-home {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .greeting {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .date-time {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .clock {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 15px 0;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .big-btn {
+            width: 100%;
+            border: none;
+            border-radius: 24px;
+            padding: 30px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .big-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-pagi {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: white;
+            box-shadow: 0 15px 30px rgba(234, 88, 12, 0.25);
+        }
+
+        .btn-petang {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+            color: white;
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-icon {
+            font-size: 3rem;
+            margin-right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-text {
+            text-align: left;
+        }
+
+        .btn-text h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .btn-text p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* =========================================
+           VIEW 2: STICKY PROGRESS AREA
+           ========================================= */
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dzikir-header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 5px;
+            position: absolute;
+            left: 15px;
+        }
+
+        .dzikir-header h1 {
+            margin: 0;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .progress-container {
+            padding: 0 25px 15px;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* =========================================
+           SLIDER AREA & CARDS
+           ========================================= */
+        .slider-viewport {
+            width: 100%;
+            overflow: hidden;
+            padding-top: 20px;
+        }
+
+        .slider-track {
+            display: flex;
+            width: 100%;
+            will-change: transform;
+            touch-action: pan-y;
+            cursor: grab;
+        }
+
+        .slider-track:active {
+            cursor: grabbing;
+        }
+
+        .slide-card {
+            flex: 0 0 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+            opacity: 0.4;
+            transform: scale(0.92);
+            transition: all 0.4s ease;
+            margin-bottom: 150px; /* Menjaga jarak aman dengan Bottom Nav */
+        }
+
+        .slide-card.active-slide {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .card-content {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 35px 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            user-select: none;
+        }
+
+        .dzikir-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin: 0 0 30px 0;
+            text-align: center;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .read-count-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem;
+            text-align: right;
+            line-height: 2.5;
+            color: var(--text-main);
+            margin-bottom: 35px;
+            direction: rtl;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: rgba(14, 165, 233, 0.1);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        body.theme-pagi .section-label { background: rgba(234, 88, 12, 0.1); }
+        body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
+
+        .latin-text, .translation-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .latin-text {
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .ref-box {
+            background-color: var(--bg-app);
+            padding: 18px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* =========================================
+           BOTTOM NAVIGATION & COUNTER FAB
+           ========================================= */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px 35px;
+            box-sizing: border-box;
+            z-index: 110;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+        }
+
+        .counter-fab {
+            background: var(--primary);
+            color: white;
+            border: none;
+            height: 65px;
+            min-width: 160px;
+            border-radius: 35px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* EFEK TEKAN PADA BUTTON (Active Press) */
+        .counter-fab:active {
+            transform: scale(0.92);
+            filter: brightness(0.9);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .counter-fab.done {
+            background: var(--text-muted);
+            box-shadow: none;
+            cursor: default;
+        }
+
+        .counter-fab .count-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* =========================================
+           ANIMASI & LAYAR SUKSES
+           ========================================= */
+        @keyframes popSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pop-anim {
+            animation: popSuccess 0.4s ease forwards;
+        }
+
+        .success-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: popSuccess 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div id="home-view" class="view-screen active">
+        <div class="header-home">
+            <h1 class="greeting" id="greeting-text">Assalamu'alaikum</h1>
+            <div class="date-time" id="date-text">...</div>
+            <div class="clock" id="clock-text">00:00</div>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Perkuat perisai spiritual Anda hari ini.</p>
+        </div>
+
+        <button class="big-btn btn-pagi" onclick="openDzikir('pagi')">
+            <div class="btn-icon">🌅</div>
+            <div class="btn-text">
+                <h2>Dzikir Pagi</h2>
+                <p>Pagar diri di awal hari</p>
+            </div>
+        </button>
+
+        <button class="big-btn btn-petang" onclick="openDzikir('petang')">
+            <div class="btn-icon">🌃</div>
+            <div class="btn-text">
+                <h2>Dzikir Petang</h2>
+                <p>Perisai diri di waktu malam</p>
+            </div>
+        </button>
+    </div>
+
+    <div id="dzikir-view" class="view-screen">
+        
+        <div class="sticky-wrapper">
+            <div class="dzikir-header">
+                <button class="back-btn" onclick="closeDzikir()">❮</button>
+                <h1 id="dzikir-header-title">Dzikir</h1>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-text" id="progress-text">
+                    <span>PROGRES</span>
+                    <span>0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-viewport" id="slider-viewport">
+            <div class="slider-track" id="slider-track">
+                </div>
+        </div>
+
+        <div class="bottom-nav">
+            <button class="nav-btn" id="btn-prev" onclick="prevSlide()" disabled>❮</button>
+            
+            <button class="counter-fab" id="btn-counter" onclick="incrementCounter()">
+                <span id="btn-main-text">BACA</span>
+                <span class="count-label" id="btn-sub-text">0 dari 0</span>
+            </button>
+            
+            <button class="nav-btn" id="btn-next" onclick="nextSlide()">❯</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Konfigurasi State Global
+    let fullData = [];
+    let currentSessionData = [];
+    let currentSlideIndex = 0;
+    let activeSession = '';
+    let userProgress = { pagi: {}, petang: {} };
+    
+    // State untuk Engine Gesture (Drag & Swipe)
+    let isDragging = false;
+    let startX = 0;
+    let currentX = 0;
+    let initialTranslatePx = 0;
+
+    // 1. Inisialisasi Aplikasi
+    async function initApp() {
+        startClock();
+        checkAndResetDailyProgress();
+        
+        try {
+            const response = await fetch('dzikir.json');
+            fullData = await response.json();
+            setupTouchEvents();
+        } catch (error) {
+            console.error("Data JSON tidak ditemukan atau gagal dimuat.", error);
+            alert("Gagal memuat data-dzikir.json. Pastikan dijalankan melalui Local Server.");
+        }
+    }
+
+    // 2. Fungsi Jam dan Tanggal Real-time
+    function startClock() {
+        setInterval(() => {
+            const now = new Date();
+            
+            document.getElementById('clock-text').innerText = now.toLocaleTimeString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            document.getElementById('date-text').innerText = now.toLocaleDateString('id-ID', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long' 
+            });
+            
+            const hour = now.getHours();
+            const greetingEl = document.getElementById('greeting-text');
+            
+            if (hour >= 3 && hour < 11) {
+                greetingEl.innerText = "Selamat Pagi";
+            } else if (hour >= 11 && hour < 15) {
+                greetingEl.innerText = "Selamat Siang";
+            } else if (hour >= 15 && hour < 18) {
+                greetingEl.innerText = "Selamat Petang";
+            } else {
+                greetingEl.innerText = "Selamat Malam";
+            }
+        }, 1000);
+    }
+
+    // 3. Sistem Reset Harian (Security Feature)
+    function checkAndResetDailyProgress() {
+        const today = new Date().toDateString();
+        const savedDate = localStorage.getItem('dzikir_last_date');
+        const savedProgress = localStorage.getItem('dzikir_progress');
+        
+        if (savedDate !== today) {
+            userProgress = { pagi: {}, petang: {} };
+            localStorage.setItem('dzikir_last_date', today);
+            saveProgress();
+        } else if (savedProgress) {
+            userProgress = JSON.parse(savedProgress);
+        }
+    }
+
+    function saveProgress() {
+        localStorage.setItem('dzikir_progress', JSON.stringify(userProgress));
+    }
+
+    // 4. Navigasi Antar Tampilan
+    function openDzikir(session) {
+        activeSession = session;
+        currentSlideIndex = 0;
+        
+        document.getElementById('home-view').classList.remove('active');
+        document.getElementById('dzikir-view').classList.add('active');
+        
+        document.body.className = 'theme-' + session;
+        
+        const headerTitle = session === 'pagi' ? 'Dzikir Pagi' : 'Dzikir Petang';
+        document.getElementById('dzikir-header-title').innerText = headerTitle;
+        
+        currentSessionData = fullData.filter(d => d.waktu === 'keduanya' || d.waktu === session);
+        
+        buildSlides();
+        updateUI();
+        window.scrollTo(0, 0);
+    }
+
+    function closeDzikir() {
+        document.getElementById('dzikir-view').classList.remove('active');
+        document.getElementById('home-view').classList.add('active');
+        document.body.className = '';
+    }
+
+    // 5. Membangun Kartu ke dalam DOM
+    function buildSlides() {
+        const track = document.getElementById('slider-track');
+        track.innerHTML = '';
+        
+        currentSessionData.forEach((item) => {
+            if (!userProgress[activeSession][item.id]) {
+                userProgress[activeSession][item.id] = 0;
+            }
+            
+            const card = document.createElement('div');
+            card.className = 'slide-card';
+            card.innerHTML = `
+                <div class="card-content">
+                    <h2 class="dzikir-title">
+                        ${item.title} 
+                        <span class="read-count-label">Dibaca ${item.target_baca} kali</span>
+                    </h2>
+                    
+                    <div class="arabic">${item.arabic}</div>
+                    
+                    <span class="section-label">Cara Baca</span>
+                    <div class="latin-text">${item.latin}</div>
+                    
+                    <span class="section-label">Artinya</span>
+                    <div class="translation-text">${item.translation}</div>
+                    
+                    <div class="ref-box">
+                        <em>${item.referensi}</em>
+                    </div>
+                </div>
+            `;
+            track.appendChild(card);
+        });
+        
+        // Membangun Layar Sukses
+        const finishScreen = document.createElement('div');
+        finishScreen.className = 'slide-card';
+        const icon = activeSession === 'pagi' ? '🌅' : '🌃';
+        
+        finishScreen.innerHTML = `
+            <div class="success-screen">
+                <div class="success-icon">${icon}</div>
+                <h2 style="color: var(--primary);">Selesai</h2>
+                <p>Dzikir ${activeSession} telah tunai. Semoga perlindungan Allah selalu menyertai.</p>
+                <button onclick="closeDzikir()" style="padding:15px 30px; border-radius:30px; border:none; background:var(--primary); color:white; font-weight:700; cursor:pointer; margin-top: 20px;">Kembali ke Beranda</button>
+            </div>
+        `;
+        track.appendChild(finishScreen);
+    }
+
+    // 6. Engine Swipe/Drag Berbasis Pixel (Stabil)
+    function setupTouchEvents() {
+        const viewport = document.getElementById('slider-viewport');
+        
+        const onStart = (e) => {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            
+            const track = document.getElementById('slider-track');
+            initialTranslatePx = -currentSlideIndex * viewport.offsetWidth;
+            
+            // Matikan transisi agar kartu menempel di jari
+            track.style.transition = 'none';
+        };
+
+        const onMove = (e) => {
+            if (!isDragging) return;
+            
+            currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            const diff = currentX - startX;
+            
+            const track = document.getElementById('slider-track');
+            track.style.transform = `translateX(${initialTranslatePx + diff}px)`;
+        };
+
+        const onEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
+            const diff = endX - startX;
+            const threshold = 100; // Minimal gesekan dalam pixel
+            
+            if (diff < -threshold && currentSlideIndex < currentSessionData.length) {
+                currentSlideIndex++;
+            } else if (diff > threshold && currentSlideIndex > 0) {
+                currentSlideIndex--;
+            }
+            
+            const track = document.getElementById('slider-track');
+            track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+            
+            updateUI();
+        };
+
+        // Pasang Event Listener
+        viewport.addEventListener('mousedown', onStart);
+        viewport.addEventListener('mousemove', onMove);
+        viewport.addEventListener('mouseup', onEnd);
+        viewport.addEventListener('mouseleave', onEnd);
+        
+        viewport.addEventListener('touchstart', onStart, { passive: true });
+        viewport.addEventListener('touchmove', onMove, { passive: true });
+        viewport.addEventListener('touchend', onEnd);
+    }
+
+    // 7. Pembaruan Antarmuka Pengguna
+    function updateUI() {
+        if (!currentSessionData.length) return;
+        
+        // Posisikan slider menggunakan persen agar aman jika layar diresize
+        const track = document.getElementById('slider-track');
+        track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+        
+        // Atur status aktif pada kartu untuk efek visual
+        const cards = document.querySelectorAll('.slide-card');
+        cards.forEach((card, index) => {
+            if (index === currentSlideIndex) {
+                card.classList.add('active-slide');
+            } else {
+                card.classList.remove('active-slide');
+            }
+        });
+        
+        // Hitung Progres
+        const isEndScreen = currentSlideIndex === currentSessionData.length;
+        const progressPercent = isEndScreen ? 100 : (currentSlideIndex / currentSessionData.length) * 100;
+        
+        document.getElementById('progress-fill').style.width = progressPercent + '%';
+        
+        const progressTextEl = document.getElementById('progress-text');
+        if (isEndScreen) {
+            progressTextEl.innerHTML = `<span>STATUS</span> <span>SELESAI</span>`;
+            document.getElementById('btn-counter').style.visibility = 'hidden';
+        } else {
+            progressTextEl.innerHTML = `<span>DZIKIR ${currentSlideIndex + 1} DARI ${currentSessionData.length}</span> <span>${Math.round(progressPercent)}%</span>`;
+            document.getElementById('btn-counter').style.visibility = 'visible';
+            updateFAB();
+        }
+        
+        // Atur tombol navigasi kiri-kanan
+        document.getElementById('btn-prev').disabled = currentSlideIndex === 0;
+        document.getElementById('btn-next').disabled = isEndScreen;
+    }
+
+    // 8. Pembaruan Tombol FAB (Floating Action Button)
+    function updateFAB() {
+        const item = currentSessionData[currentSlideIndex];
+        const count = userProgress[activeSession][item.id];
+        const fab = document.getElementById('btn-counter');
+        
+        fab.classList.remove('pop-anim');
+        
+        if (count >= item.target_baca) {
+            document.getElementById('btn-main-text').innerText = "✓ SELESAI";
+            document.getElementById('btn-sub-text').innerText = "Lanjut Berikutnya";
+            fab.classList.add('done');
+        } else {
+            document.getElementById('btn-main-text').innerText = "BACA";
+            document.getElementById('btn-sub-text').innerText = `${count} dari ${item.target_baca}`;
+            fab.classList.remove('done');
+        }
+    }
+
+    // 9. Aksi Klik Tombol Baca
+    function incrementCounter() {
+        const item = currentSessionData[currentSlideIndex];
+        
+        if (userProgress[activeSession][item.id] < item.target_baca) {
+            userProgress[activeSession][item.id]++;
+            saveProgress();
+            
+            // Haptic Feedback: Getar pendek
+            if (navigator.vibrate) {
+                navigator.vibrate(40);
+            }
+            
+            updateFAB();
+            
+            // Animasi Pop pada tombol
+            const fab = document.getElementById('btn-counter');
+            fab.classList.remove('pop-anim');
+            void fab.offsetWidth; // Trigger reflow DOM
+            fab.classList.add('pop-anim');
+            
+            // Jika target hitungan selesai
+            if (userProgress[activeSession][item.id] === item.target_baca) {
+                setTimeout(() => {
+                    // Haptic Feedback: Getar panjang tanda selesai
+                    if (navigator.vibrate) {
+                        navigator.vibrate([30, 50, 30]);
+                    }
+                    nextSlide();
+                }, 600);
+            }
+        }
+    }
+
+    // 10. Kontrol Navigasi
+    function nextSlide() {
+        if (currentSlideIndex < currentSessionData.length) {
+            currentSlideIndex++;
+            updateUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlideIndex > 0) {
+            currentSlideIndex--;
+            updateUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    // Panggil fungsi inisialisasi ketika DOM siap
+    document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>

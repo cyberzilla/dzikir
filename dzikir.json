@@ -1,0 +1,112 @@
+[
+    {
+        "id": 1,
+        "title": "Ayat Kursi",
+        "waktu": "keduanya",
+        "target_baca": 1,
+        "arabic": "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+        "latin": "Allahu laa ilaaha illaa huwal hayyul qayyum. Laa ta'khudzuhuu sinatuw wa laa naum. Lahuu maa fis samaawaati wa maa fil ardh. Man dzal ladzii yasyfa'u 'indahuu illaa bi idznih. Ya'lamu maa bayna aidiihim wa maa khalfahum. Wa laa yuhiithuuna bi syai-im min 'ilmihii illaa bimaa syaa-a. Wasi'a kursiyyuhus samaawaati wal ardh walaa ya-uuduhuu hifzhuhumaa Wahuwal 'aliyyul 'azhiim.",
+        "translation": "Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus menerus mengurus (makhluk-Nya), tidak mengantuk dan tidak tidur. Milik-Nya apa yang ada di langit dan di bumi. Tidak ada yang dapat memberi syafaat di sisi-Nya tanpa izin-Nya. Dia mengetahui apa yang di hadapan mereka dan apa yang di belakang mereka, dan mereka tidak mengetahui sesuatu apa pun tentang ilmu-Nya melainkan apa yang Dia kehendaki. Kursi-Nya meliputi langit dan bumi. Dan Dia tidak merasa berat memelihara keduanya, dan Dia Mahatinggi, Mahabesar.",
+        "dalil": "Barangsiapa membacanya di pagi hari, maka ia akan dilindungi dari gangguan jin hingga petang. Dan barangsiapa membacanya di petang hari, maka ia akan dilindungi hingga pagi.",
+        "referensi": "HR. Al-Hakim (1/562). Syaikh Al-Albani menshahihkannya dalam Shahih At-Targhib wat Tarhib no. 655."
+    },
+    {
+        "id": 2,
+        "title": "Surah Al-Ikhlas",
+        "waktu": "keduanya",
+        "target_baca": 3,
+        "arabic": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. قُلْ هُوَ اللَّهُ أَحَدٌ. اللَّهُ الصَّمَدُ. لَمْ يَلِدْ وَلَمْ يُولَدْ. وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+        "latin": "Bismillahir-rahmaanir-rahiim. Qul huwallahu ahad. Allahus-samad. Lam yalid wa lam yuulad. Wa lam yakul-lahuu kufuwan ahad.",
+        "translation": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Dialah Allah, Yang Maha Esa. Allah adalah Tuhan yang bergantung kepada-Nya segala sesuatu. Dia tiada beranak dan tiada pula diperanakkan, dan tidak ada seorang pun yang setara dengan Dia.",
+        "dalil": "Barangsiapa membaca Surah Al-Ikhlas dan Al-Mu'awwidzatain di waktu pagi dan petang tiga kali, maka akan mencukupinya (melindunginya) dari segala keburukan.",
+        "referensi": "HR. Abu Daud no. 5082, Tirmidzi no. 3575. Hasan Shahih."
+    },
+    {
+        "id": 3,
+        "title": "Surah Al-Falaq",
+        "waktu": "keduanya",
+        "target_baca": 3,
+        "arabic": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ. مِنْ شَرِّ مَا خَلَقَ. وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ. وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ. وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+        "latin": "Bismillahir-rahmaanir-rahiim. Qul a'uudzu birabbil falaq. Min syarri maa khalaq. Wa min syarri ghaasiqin idzaa waqab. Wa min syarrin-naffaatsaati fil 'uqad. Wa min syarri haasidin idzaa hasad.",
+        "translation": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Aku berlindung kepada Tuhan yang menguasai subuh, dari kejahatan makhluk-Nya, dan dari kejahatan malam apabila telah gelap gulita, dan dari kejahatan wanita-wanita tukang sihir yang menghembus pada buhul-buhul, dan dari kejahatan orang yang dengki apabila ia dengki.",
+        "dalil": "Surah paling utama untuk menghancurkan buhul sihir dan menolak 'Ain (hasad).",
+        "referensi": "HR. Abu Daud no. 5082, Tirmidzi no. 3575. Hasan Shahih."
+    },
+    {
+        "id": 4,
+        "title": "Surah An-Naas",
+        "waktu": "keduanya",
+        "target_baca": 3,
+        "arabic": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. قُلْ أَعُوذُ بِرَبِّ النَّاسِ. مَلِكِ النَّاسِ. إِلَهِ النَّاسِ. مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ. الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ. مِنَ الْجِنَّةِ وَالنَّاسِ",
+        "latin": "Bismillahir-rahmaanir-rahiim. Qul a'uudzu birabbin-naas. Malikin-naas. Ilaahin-naas. Min syarril waswaasil khannaas. Alladzii yuwaswisu fii shuduurin-naas. Minal jinnati wan-naas.",
+        "translation": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Aku berlindung kepada Tuhan manusia. Raja manusia. Sembahan manusia. Dari kejahatan (bisikan) syaitan yang biasa bersembunyi. Yang membisikkan (kejahatan) ke dalam dada manusia. Dari golongan jin dan manusia.",
+        "dalil": "Pelindung utama dari bisikan dan manipulasi psikologis syaitan (was-was).",
+        "referensi": "HR. Abu Daud no. 5082, Tirmidzi no. 3575. Hasan Shahih."
+    },
+    {
+        "id": 5,
+        "title": "Ikrar Pagi Hari",
+        "waktu": "pagi",
+        "target_baca": 1,
+        "arabic": "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ",
+        "latin": "Allahumma bika ashbahnaa, wa bika amsainaa, wa bika nahyaa, wa bika namuutu wa ilaikan-nusyuur.",
+        "translation": "Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu pagi, dan dengan-Mu kami memasuki waktu petang. Dengan-Mu kami hidup, dengan-Mu kami mati, dan kepada-Mu-lah kebangkitan (bagi semua makhluk).",
+        "dalil": "Doa pembuka pagi agar seluruh aktivitas hari itu berada dalam perlindungan Allah.",
+        "referensi": "HR. Tirmidzi no. 3391 dan Abu Daud no. 5068. Shahih."
+    },
+    {
+        "id": 6,
+        "title": "Ikrar Petang Hari",
+        "waktu": "petang",
+        "target_baca": 1,
+        "arabic": "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ",
+        "latin": "Allahumma bika amsainaa, wa bika ashbahnaa, wa bika nahyaa, wa bika namuutu wa ilaikal mashiir.",
+        "translation": "Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu petang, dan dengan-Mu kami memasuki waktu pagi. Dengan-Mu kami hidup, dengan-Mu kami mati, dan kepada-Mu-lah tempat kembali.",
+        "dalil": "Doa pembuka petang agar seluruh aktivitas malam berada dalam perlindungan Allah.",
+        "referensi": "HR. Tirmidzi no. 3391 dan Abu Daud no. 5068. Shahih."
+    },
+    {
+        "id": 7,
+        "title": "Sayyidul Istighfar (Penghulu Istighfar)",
+        "waktu": "keduanya",
+        "target_baca": 1,
+        "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+        "latin": "Allahumma anta rabbii laa ilaaha illaa anta, khalaqtanii wa anaa 'abduka, wa anaa 'alaa 'ahdika wa wa'dika mas-tatha'tu. A'uudzu bika min syarri maa shana'tu, abuu-u laka bini'matika 'alayya, wa abuu-u bidzanbii faghfir lii fa-innahuu laa yaghfirudz-dzunuuba illaa anta.",
+        "translation": "Ya Allah, Engkau adalah Tuhanku, tidak ada tuhan yang berhak disembah selain Engkau. Engkaulah yang menciptakanku dan aku adalah hamba-Mu. Aku akan setia pada perjanjianku dengan-Mu semampuku. Aku berlindung kepada-Mu dari keburukan yang kuperbuat. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku, maka ampunilah aku. Sesungguhnya tiada yang mengampuni dosa-dosa selain Engkau.",
+        "dalil": "Barangsiapa membacanya di pagi/petang hari dengan yakin, lalu ia meninggal pada hari itu, maka ia dijamin masuk Surga. Ini menutup celah jin yang masuk lewat dosa.",
+        "referensi": "HR. Bukhari no. 6306."
+    },
+    {
+        "id": 8,
+        "title": "Perlindungan 360 Derajat (Al-'Aafiyah)",
+        "waktu": "keduanya",
+        "target_baca": 1,
+        "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
+        "latin": "Allahumma innii as-alukal 'aafiyah fid-dunyaa wal aakhirah. Allahumma innii as-alukal 'afwa wal 'aafiyah fii diinii wa dunyaaya wa ahlii wa maalii. Allahummastur 'awraatii wa aamin raw'aatii. Allahummahfazhnii min baini yadayya, wa min khalfii, wa 'an yamiinii, wa 'an syimaalii, wa min fawqii, wa a'uudzu bi'azhamatika an ughtaala min tahtii.",
+        "translation": "Ya Allah, aku memohon keselamatan di dunia dan akhirat. Ya Allah, aku memohon ampunan dan keselamatan dalam agamaku, duniaku, keluargaku, dan hartaku. Ya Allah, tutupilah auratku dan tenteramkanlah aku dari rasa takut. Ya Allah, peliharalah aku dari arah depan, belakang, kanan, kiri, dan atasku. Dan aku berlindung dengan kebesaran-Mu agar aku tidak disambar dari bawahku.",
+        "dalil": "Nabi ﷺ tidak pernah meninggalkan doa ini di pagi dan sore hari. Ini adalah tameng dari segala arah terhadap serangan sihir dan jin.",
+        "referensi": "HR. Abu Daud no. 5074, Ibnu Majah no. 3871. Shahih."
+    },
+    {
+        "id": 9,
+        "title": "Tameng Anti Bahaya & Sihir Mutlak",
+        "waktu": "keduanya",
+        "target_baca": 3,
+        "arabic": "بِسْمِ اللَّهِ الَّذِى لاَ يَضُرُّ مَعَ اسْمِهِ شَىْءٌ فِى الأَرْضِ وَلاَ فِى السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+        "latin": "Bismillahilladzi laa yadhurru ma'asmihi syai-un fil ardhi wa laa fis samaa' wa huwas samii'ul 'aliim.",
+        "translation": "Dengan nama Allah yang bila disebut, segala sesuatu di bumi dan langit tidak akan berbahaya, Dia-lah Yang Maha Mendengar lagi Maha Mengetahui.",
+        "dalil": "Barangsiapa yang membacanya sebanyak tiga kali di pagi dan petang hari, maka tidak ada sesuatu pun yang akan membahayakannya (termasuk racun fisik maupun santet).",
+        "referensi": "HR. Abu Daud no. 5088, Tirmidzi no. 3388. Shahih."
+    },
+    {
+        "id": 10,
+        "title": "Perlindungan Khusus Petang Hari",
+        "waktu": "petang",
+        "target_baca": 3,
+        "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+        "latin": "A'uudzu bikalimaatillahit taammaati min syarri maa khalaq.",
+        "translation": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang diciptakan-Nya.",
+        "dalil": "Barangsiapa membacanya di sore/petang hari sebanyak tiga kali, niscaya tidak akan ada racun atau binatang sengatan (maupun gangguan jin malam) yang membahayakannya.",
+        "referensi": "HR. Ahmad (2/290) dan Muslim no. 2709."
+    }
+]
