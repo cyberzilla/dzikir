@@ -46,6 +46,11 @@ body {
     color: var(--text-main);
     overflow-x: hidden;
     scrollbar-width: none;
+
+    -webkit-user-select: none; /* Safari & Chrome */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;         /* Standar Modern */
 }
 
 ::-webkit-scrollbar {
@@ -60,6 +65,7 @@ body {
     position: relative;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
     transition: background-color 0.4s ease;
+    /* overflow: hidden; DIHAPUS agar Progress Bar kembali sticky */
 }
 
 .view-screen {
@@ -250,7 +256,7 @@ body {
     will-change: transform;
     touch-action: pan-y;
     cursor: grab;
-    align-items: flex-start; /* FIX BUG: Mencegah efek stretch otomatis */
+    align-items: flex-start;
 }
 
 .slider-track:active {
@@ -264,7 +270,7 @@ body {
     opacity: 0.4;
     transform: scale(0.92);
     transition: all 0.4s ease;
-    margin-bottom: 150px; /* Menjaga jarak aman dengan Bottom Nav */
+    margin-bottom: 120px;
 }
 
 .slide-card.active-slide {
@@ -302,15 +308,17 @@ body {
 .arabic {
     font-family: 'Amiri', serif;
     font-size: 2.4rem;
-    text-align: right;
+    text-align: right; /* Teks Arab tetap rata kanan */
     line-height: 2.5;
     color: var(--text-main);
     margin-bottom: 35px;
     direction: rtl;
 }
 
+/* Label ditengah dengan margin simetris */
 .section-label {
-    display: inline-block;
+    display: block;
+    width: fit-content;
     font-size: 0.75rem;
     color: var(--primary);
     background: rgba(14, 165, 233, 0.1);
@@ -318,29 +326,22 @@ body {
     border-radius: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin: 0 auto 12px auto;
 }
 
 body.theme-pagi .section-label { background: rgba(234, 88, 12, 0.1); }
 body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
+/* Teks Latin dan Terjemahan ditengah */
 .latin-text, .translation-text {
     font-size: 0.95rem;
     line-height: 1.7;
     margin-bottom: 30px;
+    text-align: center;
 }
 
 .latin-text {
     font-style: italic;
-    color: var(--text-muted);
-}
-
-.ref-box {
-    background-color: var(--bg-app);
-    padding: 18px;
-    border-radius: 14px;
-    font-size: 0.85rem;
-    border: 1px solid var(--border-color);
     color: var(--text-muted);
 }
 
@@ -349,34 +350,36 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
    ========================================= */
 .bottom-nav {
     position: fixed;
-    bottom: 0;
+    bottom: 35px;
     width: 100%;
     max-width: 480px;
-    background: var(--nav-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-top: 1px solid var(--border-color);
+    background: transparent;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 25px 35px;
+    padding: 10px 25px;
     box-sizing: border-box;
     z-index: 110;
+    pointer-events: none;
+}
+
+.nav-btn, .counter-fab {
+    pointer-events: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .nav-btn {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     color: var(--text-main);
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    font-size: 1.2rem;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .nav-btn:disabled {
@@ -387,12 +390,11 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     background: var(--primary);
     color: white;
     border: none;
-    height: 65px;
-    min-width: 160px;
-    border-radius: 35px;
-    font-size: 1.1rem;
+    height: 50px;
+    min-width: 130px;
+    border-radius: 25px;
+    font-size: 1rem;
     font-weight: 700;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
@@ -403,23 +405,99 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     -webkit-tap-highlight-color: transparent;
 }
 
-/* EFEK TEKAN PADA BUTTON (Active Press) */
 .counter-fab:active {
     transform: scale(0.92);
     filter: brightness(0.9);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
 
 .counter-fab.done {
     background: var(--text-muted);
-    box-shadow: none;
     cursor: default;
+    box-shadow: none;
 }
 
 .counter-fab .count-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
     opacity: 0.9;
+}
+
+/* =========================================
+   BOTTOM SHEET (CATATAN KAKI DRAGGABLE)
+   ========================================= */
+.bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 480px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
+    z-index: 120;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: translateY(calc(100% - 35px));
+    display: flex;
+    flex-direction: column;
+    max-height: 60vh;
+}
+
+.bottom-sheet.expanded {
+    transform: translateY(0);
+}
+
+.drag-area {
+    width: 100%;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    flex-shrink: 0;
+}
+
+.drag-area:active {
+    cursor: grabbing;
+}
+
+.drag-handle {
+    width: 40px;
+    height: 5px;
+    background-color: var(--text-muted);
+    border-radius: 5px;
+    opacity: 0.4;
+}
+
+.sheet-content {
+    padding: 0 25px 25px;
+    overflow-y: auto;
+}
+
+.sheet-title {
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dalil-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    margin-bottom: 15px;
+}
+
+.ref-box {
+    background-color: var(--bg-body);
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
 /* =========================================

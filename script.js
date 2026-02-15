@@ -5,7 +5,7 @@ let currentSlideIndex = 0;
 let activeSession = '';
 let userProgress = { pagi: {}, petang: {} };
 
-// State untuk Engine Gesture (Drag & Swipe)
+// State untuk Engine Gesture Layar Utama
 let isDragging = false;
 let startX = 0;
 let currentX = 0;
@@ -20,6 +20,7 @@ async function initApp() {
         const response = await fetch('dzikir.json');
         fullData = await response.json();
         setupTouchEvents();
+        setupSheetDrag(); // Inisialisasi engine drag untuk bottom sheet
     } catch (error) {
         console.error("Data JSON tidak ditemukan atau gagal dimuat.", error);
         alert("Gagal memuat dzikir.json. Pastikan dijalankan melalui Local Server.");
@@ -100,6 +101,7 @@ function closeDzikir() {
     document.getElementById('dzikir-view').classList.remove('active');
     document.getElementById('home-view').classList.add('active');
     document.body.className = '';
+    document.getElementById('bottom-sheet').classList.remove('expanded');
 }
 
 // 5. Membangun Kartu ke dalam DOM
@@ -128,10 +130,6 @@ function buildSlides() {
                 
                 <span class="section-label">Artinya</span>
                 <div class="translation-text">${item.translation}</div>
-                
-                <div class="ref-box">
-                    <em>${item.referensi}</em>
-                </div>
             </div>
         `;
         track.appendChild(card);
@@ -153,7 +151,7 @@ function buildSlides() {
     track.appendChild(finishScreen);
 }
 
-// 6. Engine Swipe/Drag Berbasis Pixel (Stabil)
+// 6. Engine Swipe/Drag Berbasis Pixel untuk Konten Dzikir
 function setupTouchEvents() {
     const viewport = document.getElementById('slider-viewport');
 
@@ -163,8 +161,6 @@ function setupTouchEvents() {
 
         const track = document.getElementById('slider-track');
         initialTranslatePx = -currentSlideIndex * viewport.offsetWidth;
-
-        // Matikan transisi agar kartu menempel di jari
         track.style.transition = 'none';
     };
 
@@ -184,7 +180,7 @@ function setupTouchEvents() {
 
         const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
         const diff = endX - startX;
-        const threshold = 100; // Minimal gesekan dalam pixel
+        const threshold = 100;
 
         if (diff < -threshold && currentSlideIndex < currentSessionData.length) {
             currentSlideIndex++;
@@ -193,13 +189,11 @@ function setupTouchEvents() {
         }
 
         const track = document.getElementById('slider-track');
-        // FIX BUG: Transisi transformasi geser dan tinggi kartu animasi sejalan
         track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
 
         updateUI();
     };
 
-    // Pasang Event Listener
     viewport.addEventListener('mousedown', onStart);
     viewport.addEventListener('mousemove', onMove);
     viewport.addEventListener('mouseup', onEnd);
@@ -214,11 +208,9 @@ function setupTouchEvents() {
 function updateUI() {
     if (!currentSessionData.length) return;
 
-    // Posisikan slider menggunakan persen agar aman jika layar diresize
     const track = document.getElementById('slider-track');
     track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
 
-    // Atur status aktif pada kartu untuk efek visual
     const cards = document.querySelectorAll('.slide-card');
     cards.forEach((card, index) => {
         if (index === currentSlideIndex) {
@@ -228,30 +220,40 @@ function updateUI() {
         }
     });
 
-    // FIX BUG: Menyesuaikan tinggi kontainer persis dengan kartu yang aktif
+    // Menyesuaikan tinggi kontainer persis dengan kartu yang aktif
     const activeCard = cards[currentSlideIndex];
     if (activeCard) {
-        // offsetHeight mengambil tinggi elemen, ditambah 150px untuk margin-bottom
-        track.style.height = (activeCard.offsetHeight + 150) + 'px';
+        track.style.height = (activeCard.offsetHeight + 120) + 'px';
     }
 
-    // Hitung Progres
     const isEndScreen = currentSlideIndex === currentSessionData.length;
     const progressPercent = isEndScreen ? 100 : (currentSlideIndex / currentSessionData.length) * 100;
 
     document.getElementById('progress-fill').style.width = progressPercent + '%';
 
     const progressTextEl = document.getElementById('progress-text');
+    const bottomSheet = document.getElementById('bottom-sheet');
+
     if (isEndScreen) {
         progressTextEl.innerHTML = `<span>STATUS</span> <span>SELESAI</span>`;
         document.getElementById('btn-counter').style.visibility = 'hidden';
+        bottomSheet.style.display = 'none'; // Sembunyikan panel di halaman akhir
     } else {
         progressTextEl.innerHTML = `<span>DZIKIR ${currentSlideIndex + 1} DARI ${currentSessionData.length}</span> <span>${Math.round(progressPercent)}%</span>`;
         document.getElementById('btn-counter').style.visibility = 'visible';
+        bottomSheet.style.display = 'flex'; // Tampilkan kembali panel
+
+        // Isi data Dalil & Referensi ke dalam Bottom Sheet
+        const activeItem = currentSessionData[currentSlideIndex];
+        document.getElementById('sheet-dalil').innerText = activeItem.dalil || 'Tidak ada catatan spesifik.';
+        document.getElementById('sheet-ref').innerHTML = `<em>${activeItem.referensi}</em>`;
+
+        // Tutup panel otomatis saat berganti halaman dzikir
+        bottomSheet.classList.remove('expanded');
+
         updateFAB();
     }
 
-    // Atur tombol navigasi kiri-kanan
     document.getElementById('btn-prev').disabled = currentSlideIndex === 0;
     document.getElementById('btn-next').disabled = isEndScreen;
 }
@@ -283,23 +285,19 @@ function incrementCounter() {
         userProgress[activeSession][item.id]++;
         saveProgress();
 
-        // Haptic Feedback: Getar pendek
         if (navigator.vibrate) {
             navigator.vibrate(40);
         }
 
         updateFAB();
 
-        // Animasi Pop pada tombol
         const fab = document.getElementById('btn-counter');
         fab.classList.remove('pop-anim');
-        void fab.offsetWidth; // Trigger reflow DOM
+        void fab.offsetWidth;
         fab.classList.add('pop-anim');
 
-        // Jika target hitungan selesai
         if (userProgress[activeSession][item.id] === item.target_baca) {
             setTimeout(() => {
-                // Haptic Feedback: Getar panjang tanda selesai
                 if (navigator.vibrate) {
                     navigator.vibrate([30, 50, 30]);
                 }
@@ -326,12 +324,72 @@ function prevSlide() {
     }
 }
 
-// Panggil fungsi inisialisasi ketika DOM siap
-document.addEventListener('DOMContentLoaded', initApp);
+// 11. Engine Drag & Swipe untuk Bottom Sheet (Catatan Kaki)
+function setupSheetDrag() {
+    const sheet = document.getElementById('bottom-sheet');
+    const dragArea = document.getElementById('drag-area');
+    let startY = 0;
+    let currentY = 0;
+    let isDraggingSheet = false;
 
-// FIX BUG: Memperbarui tinggi saat layar di-resize
+    const onStartSheet = (e) => {
+        isDraggingSheet = true;
+        startY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
+        sheet.style.transition = 'none';
+    };
+
+    const onMoveSheet = (e) => {
+        if (!isDraggingSheet) return;
+        e.preventDefault();
+
+        currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
+        const diff = currentY - startY;
+        const isExpanded = sheet.classList.contains('expanded');
+
+        let transformY = isExpanded ? diff : (sheet.offsetHeight - 35) + diff;
+
+        if (transformY < 0) transformY = 0;
+        if (transformY > sheet.offsetHeight - 35) transformY = sheet.offsetHeight - 35;
+
+        sheet.style.transform = `translateY(${transformY}px)`;
+    };
+
+    const onEndSheet = (e) => {
+        if (!isDraggingSheet) return;
+        isDraggingSheet = false;
+        sheet.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+
+        const diff = currentY - startY;
+        const isExpanded = sheet.classList.contains('expanded');
+
+        if (Math.abs(diff) < 5) {
+            sheet.classList.toggle('expanded');
+        } else {
+            if (isExpanded && diff > 50) {
+                sheet.classList.remove('expanded');
+            } else if (!isExpanded && diff < -50) {
+                sheet.classList.add('expanded');
+            }
+        }
+
+        sheet.style.transform = '';
+    };
+
+    dragArea.addEventListener('mousedown', onStartSheet);
+    document.addEventListener('mousemove', onMoveSheet, { passive: false });
+    document.addEventListener('mouseup', onEndSheet);
+
+    dragArea.addEventListener('touchstart', onStartSheet, { passive: true });
+    document.addEventListener('touchmove', onMoveSheet, { passive: false });
+    document.addEventListener('touchend', onEndSheet);
+}
+
+// Listener global agar tinggi selalu update saat layar diputar/di-resize
 window.addEventListener('resize', () => {
     if (document.getElementById('dzikir-view').classList.contains('active')) {
         updateUI();
     }
 });
+
+// Panggil fungsi inisialisasi ketika DOM siap
+document.addEventListener('DOMContentLoaded', initApp);
