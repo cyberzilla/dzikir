@@ -5,9 +5,9 @@ const urlsToCache = [
     './style.css',
     './script.js',
     './dzikir.json',
-    './manifest.json'
-    // './icon-192.png',
-    // './icon-512.png'
+    './manifest.json',
+    './icon-192.png',
+    './icon-512.png'
 ];
 
 // Event Install: Menyimpan file ke dalam Cache

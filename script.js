@@ -8,20 +8,23 @@ let userProgress = { pagi: {}, petang: {} };
 // State untuk Engine Gesture Layar Utama
 let isDragging = false;
 let startX = 0;
-let currentX = 0;
 let initialTranslatePx = 0;
 
 // 1. Inisialisasi Aplikasi
 async function initApp() {
     startClock();
     checkAndResetDailyProgress();
-    registerServiceWorker(); // Mendaftarkan PWA
+    registerServiceWorker();
 
     try {
         const response = await fetch('dzikir.json');
         fullData = await response.json();
         setupTouchEvents();
-        setupSheetDrag(); // Inisialisasi engine drag untuk bottom sheet
+        setupSheetDrag();
+
+        // Memulihkan posisi terakhir pengguna jika ada (Fitur Resume)
+        restoreState();
+
     } catch (error) {
         console.error("Data JSON tidak ditemukan atau gagal dimuat.", error);
         alert("Gagal memuat dzikir.json. Pastikan dijalankan melalui Local Server.");
@@ -59,15 +62,18 @@ function startClock() {
     }, 1000);
 }
 
-// 3. Sistem Reset Harian (Security Feature)
+// 3. Sistem Reset Harian & State (Security Feature)
 function checkAndResetDailyProgress() {
     const today = new Date().toDateString();
     const savedDate = localStorage.getItem('dzikir_last_date');
     const savedProgress = localStorage.getItem('dzikir_progress');
 
     if (savedDate !== today) {
+        // Jika hari berganti, reset semua progres dan hapus state posisi terakhir
         userProgress = { pagi: {}, petang: {} };
         localStorage.setItem('dzikir_last_date', today);
+        localStorage.removeItem('dzikir_active_session');
+        localStorage.removeItem('dzikir_current_slide');
         saveProgress();
     } else if (savedProgress) {
         userProgress = JSON.parse(savedProgress);
@@ -76,6 +82,31 @@ function checkAndResetDailyProgress() {
 
 function saveProgress() {
     localStorage.setItem('dzikir_progress', JSON.stringify(userProgress));
+}
+
+// Fitur Pemulihan Posisi (Resume)
+function restoreState() {
+    const savedSession = localStorage.getItem('dzikir_active_session');
+    const savedSlide = localStorage.getItem('dzikir_current_slide');
+
+    if (savedSession) {
+        // Buka sesi yang tersimpan tanpa memicu animasi transisi awal
+        openDzikir(savedSession);
+
+        if (savedSlide !== null) {
+            currentSlideIndex = parseInt(savedSlide, 10);
+
+            // Validasi keamanan agar index tidak melebihi batas array
+            if (currentSlideIndex > currentSessionData.length) {
+                currentSlideIndex = currentSessionData.length;
+            }
+
+            // Matikan transisi sejenak agar UI langsung melompat ke kartu terakhir tanpa terlihat bergeser
+            const track = document.getElementById('slider-track');
+            track.style.transition = 'none';
+            updateUI();
+        }
+    }
 }
 
 // 4. Navigasi Antar Tampilan
@@ -103,6 +134,11 @@ function closeDzikir() {
     document.getElementById('home-view').classList.add('active');
     document.body.className = '';
     document.getElementById('bottom-sheet').classList.remove('expanded');
+
+    // Hapus state karena user sengaja kembali ke home / menutup sesi
+    localStorage.removeItem('dzikir_active_session');
+    localStorage.removeItem('dzikir_current_slide');
+    activeSession = '';
 }
 
 // 5. Membangun Kartu ke dalam DOM
@@ -136,7 +172,6 @@ function buildSlides() {
         track.appendChild(card);
     });
 
-    // Membangun Layar Sukses
     const finishScreen = document.createElement('div');
     finishScreen.className = 'slide-card';
     const icon = activeSession === 'pagi' ? '🌅' : '🌃';
@@ -152,13 +187,18 @@ function buildSlides() {
     track.appendChild(finishScreen);
 }
 
-// 6. Engine Swipe/Drag Berbasis Pixel untuk Konten Dzikir
+// 6. Engine Swipe dengan "Intent Detection"
 function setupTouchEvents() {
     const viewport = document.getElementById('slider-viewport');
+    let startY = 0;
+    let isScrolling = null;
 
     const onStart = (e) => {
         isDragging = true;
+        isScrolling = null;
+
         startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        startY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
 
         const track = document.getElementById('slider-track');
         initialTranslatePx = -currentSlideIndex * viewport.offsetWidth;
@@ -168,16 +208,38 @@ function setupTouchEvents() {
     const onMove = (e) => {
         if (!isDragging) return;
 
-        currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-        const diff = currentX - startX;
+        const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        const currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
+
+        const diffX = currentX - startX;
+        const diffY = currentY - startY;
+
+        if (isScrolling === null) {
+            if (Math.abs(diffX) > 3 || Math.abs(diffY) > 3) {
+                isScrolling = Math.abs(diffY) > Math.abs(diffX);
+            }
+        }
+
+        if (isScrolling) {
+            return;
+        }
+
+        if (e.cancelable) {
+            e.preventDefault();
+        }
 
         const track = document.getElementById('slider-track');
-        track.style.transform = `translateX(${initialTranslatePx + diff}px)`;
+        track.style.transform = `translateX(${initialTranslatePx + diffX}px)`;
     };
 
     const onEnd = (e) => {
         if (!isDragging) return;
         isDragging = false;
+
+        if (isScrolling) {
+            isScrolling = null;
+            return;
+        }
 
         const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
         const diff = endX - startX;
@@ -196,12 +258,12 @@ function setupTouchEvents() {
     };
 
     viewport.addEventListener('mousedown', onStart);
-    viewport.addEventListener('mousemove', onMove);
+    viewport.addEventListener('mousemove', onMove, { passive: false });
     viewport.addEventListener('mouseup', onEnd);
     viewport.addEventListener('mouseleave', onEnd);
 
     viewport.addEventListener('touchstart', onStart, { passive: true });
-    viewport.addEventListener('touchmove', onMove, { passive: true });
+    viewport.addEventListener('touchmove', onMove, { passive: false });
     viewport.addEventListener('touchend', onEnd);
 }
 
@@ -254,6 +316,12 @@ function updateUI() {
 
     document.getElementById('btn-prev').disabled = currentSlideIndex === 0;
     document.getElementById('btn-next').disabled = isEndScreen;
+
+    // Simpan posisi saat ini ke LocalStorage setiap kali UI diperbarui
+    if (activeSession) {
+        localStorage.setItem('dzikir_active_session', activeSession);
+        localStorage.setItem('dzikir_current_slide', currentSlideIndex);
+    }
 }
 
 // 8. Pembaruan Tombol FAB (Floating Action Button)
@@ -338,7 +406,8 @@ function setupSheetDrag() {
 
     const onMoveSheet = (e) => {
         if (!isDraggingSheet) return;
-        e.preventDefault();
+
+        if (e.cancelable) e.preventDefault();
 
         currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
         const diff = currentY - startY;
