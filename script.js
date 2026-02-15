@@ -98,15 +98,14 @@ function restoreState() {
                 currentSlideIndex = currentSessionData.length;
             }
 
-            // Matikan transisi sejenak agar UI langsung melompat tanpa terlihat bergeser
+            // Matikan transisi CSS sejenak agar UI melompat instan tanpa dianimasikan
             const track = document.getElementById('slider-track');
             track.style.transition = 'none';
             updateUI();
 
-            // MENGATASI BUG ANIMASI SLIDE SAAT REFRESH:
-            // Tunggu 50ms setelah render selesai, lalu nyalakan kembali fungsi transisi CSS
+            // Nyalakan kembali animasi CSS setelah proses melompat ke memori selesai
             setTimeout(() => {
-                track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
+                track.style.transition = ''; // Ini mengembalikan kontrol animasi ke file style.css
             }, 50);
         }
     }
@@ -127,9 +126,17 @@ function openDzikir(session) {
 
     currentSessionData = fullData.filter(d => d.waktu === 'keduanya' || d.waktu === session);
 
+    // Matikan transisi agar pembentukan DOM pertama kali tidak menimbulkan goyangan
+    const track = document.getElementById('slider-track');
+    track.style.transition = 'none';
+
     buildSlides();
     updateUI();
     window.scrollTo(0, 0);
+
+    setTimeout(() => {
+        track.style.transition = ''; // Kembalikan animasi ke kontrol CSS
+    }, 50);
 }
 
 function closeDzikir() {
@@ -204,6 +211,8 @@ function setupTouchEvents() {
 
         const track = document.getElementById('slider-track');
         initialTranslatePx = -currentSlideIndex * viewport.offsetWidth;
+
+        // HANYA MATIKAN transisi CSS saat user sedang menahan layar dengan jari (drag)
         track.style.transition = 'none';
     };
 
@@ -254,8 +263,9 @@ function setupTouchEvents() {
         }
 
         const track = document.getElementById('slider-track');
-        track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
 
+        // KEMBALIKAN transisi ke kontrol bawaan file CSS begitu jari dilepas
+        track.style.transition = '';
         updateUI();
     };
 
@@ -378,6 +388,8 @@ function incrementCounter() {
 function nextSlide() {
     if (currentSlideIndex < currentSessionData.length) {
         currentSlideIndex++;
+        // Pastikan transisi tidak terkunci oleh apapun
+        document.getElementById('slider-track').style.transition = '';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -386,6 +398,7 @@ function nextSlide() {
 function prevSlide() {
     if (currentSlideIndex > 0) {
         currentSlideIndex--;
+        document.getElementById('slider-track').style.transition = '';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -414,7 +427,6 @@ function setupSheetDrag() {
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
 
-        // Perhitungan Tinggi diubah menjadi 50 menyesuaikan ukuran CSS baru
         let transformY = isExpanded ? diff : (sheet.offsetHeight - 50) + diff;
 
         if (transformY < 0) transformY = 0;
@@ -431,8 +443,6 @@ function setupSheetDrag() {
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
 
-        // MENGATASI BUG KLIK: Toleransi pergeseran diubah dari 5 ke 15 piksel.
-        // Jadi meski jari sedikit meleset saat klik, panel tetap mau terbuka.
         if (Math.abs(diff) < 15) {
             sheet.classList.toggle('expanded');
         } else {

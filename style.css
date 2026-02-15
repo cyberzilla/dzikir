@@ -256,6 +256,8 @@ body {
     touch-action: pan-y;
     cursor: grab;
     align-items: flex-start;
+    /* FIX: Menerapkan animasi slide permanen secara default di CSS */
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease;
 }
 
 .slider-track:active {
@@ -346,7 +348,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
    ========================================= */
 .bottom-nav {
     position: fixed;
-    /* Ditinggikan menjadi 50px agar tidak tertutup oleh sheet yang baru */
     bottom: 50px;
     width: 100%;
     max-width: 480px;
@@ -436,7 +437,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
     z-index: 120;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    /* Ditinggikan menjadi 50px untuk menghindari salah swipe dengan sistem OS */
     transform: translateY(calc(100% - 50px));
     display: flex;
     flex-direction: column;
@@ -449,12 +449,11 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .drag-area {
     width: 100%;
-    /* Area handle diperbesar menjadi 50px agar mudah di-tap/klik */
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer; /* Indikator bahwa ini bisa diklik */
+    cursor: pointer;
     flex-shrink: 0;
     touch-action: none;
 }
