@@ -22,7 +22,7 @@ async function initApp() {
         setupTouchEvents();
         setupSheetDrag();
 
-        // Memulihkan posisi terakhir pengguna jika ada (Fitur Resume)
+        // Memulihkan posisi terakhir pengguna jika ada
         restoreState();
 
     } catch (error) {
@@ -62,7 +62,7 @@ function startClock() {
     }, 1000);
 }
 
-// 3. Sistem Reset Harian & State (Security Feature)
+// 3. Sistem Reset Harian & State
 function checkAndResetDailyProgress() {
     const today = new Date().toDateString();
     const savedDate = localStorage.getItem('dzikir_last_date');
@@ -83,43 +83,27 @@ function saveProgress() {
     localStorage.setItem('dzikir_progress', JSON.stringify(userProgress));
 }
 
-// Fitur Pemulihan Posisi (Resume)
+// Fitur Pemulihan Posisi (Resume) - DIRAPIKAN
 function restoreState() {
     const savedSession = localStorage.getItem('dzikir_active_session');
     const savedSlide = localStorage.getItem('dzikir_current_slide');
 
     if (savedSession) {
-        openDzikir(savedSession);
-
+        let initialIndex = 0;
         if (savedSlide !== null) {
-            currentSlideIndex = parseInt(savedSlide, 10);
-
-            if (currentSlideIndex > currentSessionData.length) {
-                currentSlideIndex = currentSessionData.length;
-            }
-
-            // Matikan transisi CSS sejenak agar UI melompat instan tanpa dianimasikan
-            const track = document.getElementById('slider-track');
-            track.style.transition = 'none';
-            updateUI();
-
-            // Memaksa browser menerapkan kalkulasi tata letak (Forced Reflow)
-            void track.offsetWidth;
-
-            // Nyalakan kembali animasi CSS setelah proses melompat ke memori selesai
-            track.style.transition = '';
+            initialIndex = parseInt(savedSlide, 10);
         }
+        // Langsung instruksikan openDzikir untuk lompat ke index ini
+        openDzikir(savedSession, initialIndex);
     }
 }
 
-// 4. Navigasi Antar Tampilan
-function openDzikir(session) {
+// 4. Navigasi Antar Tampilan - DITAMBAHKAN PARAMETER INDEX
+function openDzikir(session, targetIndex = 0) {
     activeSession = session;
-    currentSlideIndex = 0;
 
     document.getElementById('home-view').classList.remove('active');
     document.getElementById('dzikir-view').classList.add('active');
-
     document.body.className = 'theme-' + session;
 
     const headerTitle = session === 'pagi' ? 'Dzikir Pagi' : 'Dzikir Petang';
@@ -127,19 +111,29 @@ function openDzikir(session) {
 
     currentSessionData = fullData.filter(d => d.waktu === 'keduanya' || d.waktu === session);
 
-    // Matikan transisi agar pembentukan DOM pertama kali tidak menimbulkan goyangan
+    // Validasi target index jika dimuat dari memori
+    if (targetIndex > currentSessionData.length) {
+        targetIndex = currentSessionData.length;
+    }
+    currentSlideIndex = targetIndex;
+
     const track = document.getElementById('slider-track');
+
+    // Matikan transisi saat DOM sedang dibongkar-pasang
     track.style.transition = 'none';
 
     buildSlides();
     updateUI();
     window.scrollTo(0, 0);
 
-    // Memaksa browser menerapkan kalkulasi tata letak (Forced Reflow)
-    void track.offsetWidth;
-
-    // Kembalikan animasi ke kontrol CSS
-    track.style.transition = '';
+    // TRIK PERBAIKAN: Double requestAnimationFrame
+    // Menunggu 2 frame tayang di layar untuk memastikan browser telah
+    // selesai merender lebar elemen dan teks secara utuh sebelum menghidupkan animasi.
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            track.style.transition = '';
+        });
+    });
 }
 
 function closeDzikir() {
@@ -215,7 +209,6 @@ function setupTouchEvents() {
         const track = document.getElementById('slider-track');
         initialTranslatePx = -currentSlideIndex * viewport.offsetWidth;
 
-        // HANYA MATIKAN transisi CSS saat user sedang menahan layar dengan jari (drag)
         track.style.transition = 'none';
     };
 
@@ -266,8 +259,6 @@ function setupTouchEvents() {
         }
 
         const track = document.getElementById('slider-track');
-
-        // KEMBALIKAN transisi ke kontrol bawaan file CSS begitu jari dilepas
         track.style.transition = '';
         updateUI();
     };
@@ -287,7 +278,10 @@ function updateUI() {
     if (!currentSessionData.length) return;
 
     const track = document.getElementById('slider-track');
-    track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+
+    // Mencegah nilai -0% yang kadang membuat WebKit kebingungan mengalkulasi titik awal transisi
+    const translateVal = currentSlideIndex === 0 ? 0 : -(currentSlideIndex * 100);
+    track.style.transform = `translateX(${translateVal}%)`;
 
     const cards = document.querySelectorAll('.slide-card');
     cards.forEach((card, index) => {
