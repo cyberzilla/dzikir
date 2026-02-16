@@ -19,10 +19,10 @@ async function initApp() {
         const response = await fetch('dzikir.json');
         fullData = await response.json();
         setupTouchEvents();
-
+        
         // Setup Drag Engine
-        setupSheetDrag('bottom-sheet', 'drag-area');
-        setupSheetDrag('info-sheet', 'info-drag-area');
+        setupSheetDrag('bottom-sheet', 'drag-area');       
+        setupSheetDrag('info-sheet', 'info-drag-area');    
 
         restoreState();
 
@@ -81,9 +81,8 @@ function restoreState() {
 // 4. Navigasi Antar Tampilan
 function openDzikir(session, targetIndex = 0) {
     activeSession = session;
-    closeAllSheets(); // Pastikan sheet tertutup
+    closeAllSheets(); 
 
-    // MATIKAN Info Developer saat masuk mode Dzikir
     document.getElementById('info-sheet').style.display = 'none';
 
     document.getElementById('home-view').classList.remove('active');
@@ -112,10 +111,9 @@ function closeDzikir() {
     document.getElementById('dzikir-view').classList.remove('active');
     document.getElementById('home-view').classList.add('active');
     document.body.className = '';
-
-    closeAllSheets(); // Bersihkan semua layer sheet overlay
-
-    // MATIKAN Dalil dan NYALAKAN KEMBALI Info Developer saat di Beranda
+    
+    closeAllSheets(); 
+    
     document.getElementById('bottom-sheet').style.display = 'none';
     document.getElementById('info-sheet').style.display = 'flex';
 
@@ -277,7 +275,6 @@ function updateUI() {
         updateFAB();
     }
 
-    // MENGEMBALIKAN KODE YANG HILANG: Kontrol Tombol Navigasi Kiri & Kanan
     document.getElementById('btn-prev').disabled = currentSlideIndex === 0;
     document.getElementById('btn-next').disabled = isEndScreen;
 
@@ -333,6 +330,8 @@ function incrementCounter() {
 function nextSlide() {
     if (currentSlideIndex < currentSessionData.length) {
         currentSlideIndex++;
+        // PERBAIKAN: Paksa browser mengaktifkan transisi sebelum bergeser
+        document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -341,6 +340,8 @@ function nextSlide() {
 function prevSlide() {
     if (currentSlideIndex > 0) {
         currentSlideIndex--;
+        // PERBAIKAN: Paksa browser mengaktifkan transisi sebelum bergeser
+        document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -394,7 +395,7 @@ function setupSheetDrag(sheetId, dragAreaId) {
         }
 
         sheet.style.transform = '';
-        checkOverlay();
+        checkOverlay(); 
     };
 
     dragArea.addEventListener('mousedown', onStartSheet);
