@@ -19,6 +19,8 @@
 
 <div class="app-container">
 
+    <div id="sheet-overlay" class="sheet-overlay" onclick="closeAllSheets()"></div>
+
     <div id="home-view" class="view-screen active">
         <div class="header-home">
             <h1 class="greeting" id="greeting-text">Assalamu'alaikum</h1>
@@ -79,18 +81,35 @@
             <button class="nav-btn" id="btn-next" onclick="nextSlide()">❯</button>
         </div>
 
-        <div class="bottom-sheet" id="bottom-sheet">
-            <div class="drag-area" id="drag-area">
-                <div class="drag-handle"></div>
-            </div>
+    </div>
 
-            <div class="sheet-content">
-                <h3 class="sheet-title">Dalil & Keutamaan</h3>
-                <div class="dalil-text" id="sheet-dalil"></div>
-                <div class="ref-box" id="sheet-ref"></div>
-            </div>
+    <div class="bottom-sheet" id="info-sheet">
+        <div class="drag-area" id="info-drag-area">
+            <div class="drag-handle"></div>
+            <span class="info-drag-text">☕</span>
         </div>
 
+        <div class="sheet-content" style="text-align: center; padding-top: 5px; padding-bottom: 30px;">
+            <h3 class="sheet-title" style="margin-bottom: 15px;">By Cyberzilla</h3>
+            <p style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6;">
+                Aplikasi <strong>Pagar Harian Muslim</strong> dikembangkan secara mandiri untuk memudahkan umat Islam dalam merutinkan dzikir pagi dan petang.
+            </p>
+            <a href="https://github.com/cyberzilla/dzikir" target="_blank" rel="noopener noreferrer" class="github-link">
+                Lihat di GitHub
+            </a>
+        </div>
+    </div>
+
+    <div class="bottom-sheet" id="bottom-sheet" style="display: none;">
+        <div class="drag-area" id="drag-area">
+            <div class="drag-handle"></div>
+        </div>
+
+        <div class="sheet-content">
+            <h3 class="sheet-title">Dalil & Keutamaan</h3>
+            <div class="dalil-text" id="sheet-dalil"></div>
+            <div class="ref-box" id="sheet-ref"></div>
+        </div>
     </div>
 
 </div>
