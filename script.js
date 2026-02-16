@@ -260,7 +260,6 @@ function updateUI() {
     document.getElementById('progress-fill').style.width = progressPercent + '%';
 
     const bottomSheet = document.getElementById('bottom-sheet');
-    const infoSheet = document.getElementById('info-sheet');
 
     if (isEndScreen) {
         document.getElementById('progress-text').innerHTML = `<span>STATUS</span> <span>SELESAI</span>`;
@@ -277,6 +276,10 @@ function updateUI() {
 
         updateFAB();
     }
+
+    // MENGEMBALIKAN KODE YANG HILANG: Kontrol Tombol Navigasi Kiri & Kanan
+    document.getElementById('btn-prev').disabled = currentSlideIndex === 0;
+    document.getElementById('btn-next').disabled = isEndScreen;
 
     if (activeSession) {
         localStorage.setItem('dzikir_active_session', activeSession);
@@ -368,7 +371,6 @@ function setupSheetDrag(sheetId, dragAreaId) {
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
 
-        // MENGGUNAKAN BATAS 50px SESUAI CSS
         let transformY = isExpanded ? diff : (sheet.offsetHeight - 50) + diff;
         if (transformY < 0) transformY = 0;
         if (transformY > sheet.offsetHeight - 50) transformY = sheet.offsetHeight - 50;
