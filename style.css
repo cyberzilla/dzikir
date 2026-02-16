@@ -1,4 +1,15 @@
 /* =========================================
+   IMPORT FONT LOKAL
+   ========================================= */
+@font-face {
+    font-family: 'hafs';
+    src: url('./hafs.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* =========================================
    CSS VARIABLES & TEMA DASAR
    ========================================= */
 :root {
@@ -36,7 +47,8 @@ body.theme-petang {
    GLOBAL & LAYOUTING
    ========================================= */
 body {
-    font-family: 'Inter', sans-serif;
+    /* Menggunakan font bawaan sistem yang aman (Android, iOS, Windows, Mac) */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     background-color: var(--bg-body);
     margin: 0;
     padding: 0;
@@ -256,7 +268,6 @@ body {
     touch-action: pan-y;
     cursor: grab;
     align-items: flex-start;
-    /* FIX: Menerapkan animasi slide permanen secara default di CSS */
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease;
 }
 
@@ -306,7 +317,8 @@ body {
 }
 
 .arabic {
-    font-family: 'Amiri', serif;
+    /* Menggunakan font lokal hafs */
+    font-family: 'hafs', serif;
     font-size: 2.4rem;
     text-align: right;
     line-height: 2.5;
