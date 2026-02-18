@@ -23,14 +23,17 @@
     --nav-bg: rgba(255, 255, 255, 0.95);
 }
 
+/* =========================================
+   TEMA DZIKIR PAGI (NUANSA BIRU)
+   ========================================= */
 body.theme-pagi {
-    --bg-app: #fdf8f6;
-    --text-main: #27272a;
-    --text-muted: #71717a;
-    --primary: #ea580c;
+    --bg-app: #e0f2fe;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --primary: #0284c7;
     --card-bg: #ffffff;
-    --border-color: #ffedd5;
-    --nav-bg: rgba(255, 255, 255, 0.95);
+    --border-color: #bae6fd;
+    --nav-bg: rgba(224, 242, 254, 0.95);
 }
 
 body.theme-petang {
@@ -103,12 +106,19 @@ body {
 }
 
 /* 1. BAGIAN HEADER (Diselaraskan dengan warna awal Pagi) */
+/* 1. Sesuaikan Header agar warnanya sama dengan warna atas Dzikir Pagi */
 .header-section {
     flex: 0 0 auto;
     padding: 40px 20px 20px 20px;
     text-align: center;
-    background-color: #a1c4fd; /* Sama dengan titik awal linear-gradient pagi */
-    color: #1b4965; /* Warna font gelap agar kontras */
+
+    /* Gunakan warna yang sama persis dengan warna awal gradasi .pagi */
+    background-color: #a1c4fd;
+
+    /* Pastikan tidak ada bayangan atau garis bawah yang memisahkan */
+    border-bottom: none;
+    box-shadow: none;
+    margin-bottom: 0;
     z-index: 20;
 }
 
@@ -116,14 +126,13 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0 0 5px 0;
-    color: #1b4965;
+    color: var(--text-main); /* Sebelumnya statis biru gelap */
 }
 
 .date-time {
     font-size: 0.9rem;
     font-weight: 500;
-    color: #1b4965;
-    opacity: 0.8;
+    color: var(--text-muted); /* Agar kontras lebih lembut */
 }
 
 .clock {
@@ -132,7 +141,7 @@ body {
     margin: 5px 0 10px 0;
     letter-spacing: -1px;
     line-height: 1;
-    color: #0c4a6e;
+    color: var(--primary); /* Menggunakan warna aksen utama */
 }
 
 /* WADAH BAGIAN PAGI & PETANG */
@@ -159,8 +168,19 @@ body {
 
 /* 2. AREA PAGI (BIRU) */
 .pagi {
-    background: linear-gradient(180deg, #a1c4fd 0%, #c2e9fb 100%);
-    color: #1b4965;
+    /* Pastikan tidak ada jarak (margin) di bagian atas */
+    margin-top: 0;
+
+    /* Gradasi dimulai dari warna yang sama dengan header-section (#a1c4fd) */
+    background: linear-gradient(180deg, #a1c4fd 0%, #e0f2fe 100%);
+
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .pagi .sun {
@@ -169,12 +189,19 @@ body {
 
 /* 3. AREA PETANG (ORANYE) */
 .petang {
-    background: linear-gradient(180deg, #ffb75e 0%, #ffcf70 100%);
-    color: #5c2a00;
+    background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+    color: #f8fafc;
 }
 
+/* Modifikasi objek matahari menjadi bulan sabit (moon) khusus di area petang */
 .petang .sun {
-    background: rgba(255, 255, 255, 0.35);
+    background-color: transparent;
+    box-shadow: inset -15px -15px 0 0 rgba(255, 255, 255, 0.8);
+    transform: translate(-50%, -50%) rotate(-15deg);
+}
+
+.petang:hover .sun {
+    transform: translate(-50%, -50%) scale(1.1) rotate(-15deg);
 }
 
 /* KONTEN UTAMA TOMBOL (Matahari & Teks) */
@@ -332,7 +359,12 @@ body {
 /* =========================================
    SLIDER AREA & CARDS
    ========================================= */
-.slider-viewport { width: 100%; overflow: hidden; padding-top: 20px; padding-bottom: 120px;}
+.slider-viewport {
+    width: 100%;
+    overflow: hidden;
+    padding-top: 20px;
+    padding-bottom: 120px;
+}
 
 .slider-track {
     display: flex;
@@ -389,12 +421,30 @@ body {
 
 .arabic {
     font-family: 'hafs', serif;
-    font-size: 2.4rem;
+    font-size: 2.6rem; /* Diperbesar sedikit agar lebih ramah baca */
     text-align: right;
-    line-height: 2.5;
+    line-height: 2.1; /* Dikurangi dari 2.5 agar tidak terlalu berjarak */
     color: var(--text-main);
-    margin-bottom: 35px;
+    margin-bottom: 25px;
     direction: rtl;
+}
+
+.latin-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    text-align: center;
+    font-style: italic;
+    color: var(--primary); /* Berikan warna primary agar lebih menonjol untuk dibaca */
+    font-weight: 500;
+}
+
+.translation-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    text-align: center;
+    color: var(--text-muted); /* Gunakan teks redup agar fokus pengguna tertuju pada lafaz/latinnya */
 }
 
 .section-label {
@@ -411,7 +461,9 @@ body {
     font-family: system-ui, sans-serif;
 }
 
-body.theme-pagi .section-label { background: rgba(234, 88, 12, 0.1); }
+body.theme-pagi .section-label {
+    background: rgba(2, 132, 199, 0.1);
+}
 body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .latin-text, .translation-text {
@@ -586,17 +638,22 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 .github-link {
     display: inline-block;
     padding: 12px 30px;
-    background-color: var(--text-main);
-    color: var(--bg-body);
+    background-color: var(--primary); /* Diubah agar sinkron dengan tema */
+    color: #ffffff; /* Paksa putih agar selalu terbaca */
     text-decoration: none;
     border-radius: 25px;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
     font-family: system-ui, sans-serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Tambahkan shadow agar menonjol */
 }
 
-.github-link:active { transform: scale(0.95); opacity: 0.9; }
+.github-link:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
 /* =========================================
    ANIMASI & LAYAR SUKSES
@@ -611,3 +668,89 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .success-screen { text-align: center; padding: 60px 20px; font-family: system-ui, sans-serif;}
 .success-icon { font-size: 5rem; margin-bottom: 20px; display: inline-block; animation: popSuccess 0.6s ease forwards; }
+
+/* =========================================
+   ANIMASI AWAN (DZIKIR PAGI)
+   ========================================= */
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50px;
+    animation: floatCloud linear infinite;
+    z-index: 1;
+    pointer-events: none;
+    left: -150px; /* Titik awal pasti di luar layar kiri */
+}
+
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+}
+
+.cloud::before {
+    width: 50%;
+    height: 100%;
+    top: -40%;
+    left: 15%;
+}
+
+.cloud::after {
+    width: 40%;
+    height: 80%;
+    top: -20%;
+    right: 15%;
+}
+
+@keyframes floatCloud {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(800px); } /* Bergerak mulus sejauh 800px ke kanan */
+}
+
+/* =========================================
+   ANIMASI BINTANG (DZIKIR PETANG)
+   ========================================= */
+.star {
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 50%;
+    /* Gunakan normal, jangan alternate, agar siklusnya 0% -> 100% berulang searah */
+    animation: twinkle linear infinite;
+    z-index: 1;
+    pointer-events: none;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    opacity: 0; /* Pastikan mulai dalam keadaan tidak terlihat */
+}
+
+/* Animasi dari redup -> terang -> redup lagi */
+@keyframes twinkle {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(0.5); }
+}
+
+/* =========================================
+   PERBAIKAN INFO DEVELOPER (TEMA PETANG)
+   ========================================= */
+#info-sheet {
+    background-color: #1e293b; /* Warna background persis dzikir petang */
+    border-top: 1px solid #334155;
+}
+
+#info-sheet .sheet-title {
+    color: #3b82f6; /* Biru terang agar kontras */
+}
+
+/* Mengesampingkan (override) style inline sebelumnya agar teks terbaca di background gelap */
+#info-sheet p {
+    color: #e2e8f0 !important;
+}
+
+#info-sheet .info-drag-text {
+    color: #94a3b8;
+}
+
+#info-sheet .drag-handle {
+    background-color: #64748b;
+}

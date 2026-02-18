@@ -9,11 +9,90 @@ let isDragging = false;
 let startX = 0;
 let initialTranslatePx = 0;
 
+// Fungsi Membuat Awan Bergerak Dinamis di Area Pagi
+function createClouds() {
+    const pagiArea = document.querySelector('.pagi');
+    if (!pagiArea) return;
+
+    // Bersihkan awan sebelumnya jika ada (mencegah penumpukan saat resize)
+    document.querySelectorAll('.cloud').forEach(el => el.remove());
+
+    const numClouds = 4; // Jumlah awan yang proporsional
+
+    for (let i = 0; i < numClouds; i++) {
+        const cloud = document.createElement('div');
+        cloud.className = 'cloud';
+
+        // Ukuran awan bervariasi
+        const width = Math.floor(Math.random() * 60) + 50;
+        cloud.style.width = `${width}px`;
+        cloud.style.height = `${width * 0.35}px`;
+
+        // Posisi vertikal acak (tidak menabrak ombak)
+        const top = Math.floor(Math.random() * 45) + 5;
+        cloud.style.top = `${top}%`;
+
+        // PERBAIKAN: Durasi dipercepat agar pergerakan terlihat (15 hingga 35 detik)
+        const duration = Math.floor(Math.random() * 20) + 15;
+        cloud.style.animationDuration = `${duration}s`;
+
+        // PERBAIKAN: Gunakan delay negatif agar awan sudah tersebar di layar
+        // dan langsung bergerak sejak detik pertama halaman dimuat
+        const delay = (Math.random() * duration) * -1;
+        cloud.style.animationDelay = `${delay}s`;
+
+        pagiArea.appendChild(cloud);
+    }
+}
+
+// Fungsi Membuat Bintang Berkelap-kelip Dinamis di Area Petang
+function createStars() {
+    const petangArea = document.querySelector('.petang');
+    if (!petangArea) return;
+
+    // Bersihkan bintang sebelumnya
+    document.querySelectorAll('.star').forEach(el => el.remove());
+
+    const numStars = 25; // Jumlah bintang
+
+    for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+
+        // Tentukan posisi awal secara acak
+        star.style.left = `${Math.floor(Math.random() * 100)}%`;
+        star.style.top = `${Math.floor(Math.random() * 90)}%`;
+
+        // Durasi 1 siklus penuh (muncul -> terang -> hilang) antara 2 hingga 5 detik
+        const duration = Math.random() * 3 + 2;
+        star.style.animationDuration = `${duration}s`;
+
+        // Waktu mulai yang berbeda-beda
+        const delay = Math.random() * 5;
+        star.style.animationDelay = `${delay}s`;
+
+        // PERBAIKAN: Pindahkan posisi bintang saat animasinya selesai (di fase 100% / opacity 0)
+        star.addEventListener('animationiteration', () => {
+            star.style.left = `${Math.floor(Math.random() * 100)}%`;
+            star.style.top = `${Math.floor(Math.random() * 90)}%`;
+        });
+
+        petangArea.appendChild(star);
+    }
+}
+
 // 1. Inisialisasi Aplikasi
 async function initApp() {
     startClock();
     checkAndResetDailyProgress();
     registerServiceWorker();
+
+    createClouds();
+    createStars();
 
     try {
         const response = await fetch('dzikir.json');
@@ -252,7 +331,7 @@ function updateUI() {
     });
 
     const activeCard = cards[currentSlideIndex];
-    if (activeCard) track.style.height = (activeCard.offsetHeight + 120) + 'px';
+    if (activeCard) track.style.height = (activeCard.offsetHeight) + 'px';
 
     const isEndScreen = currentSlideIndex === currentSessionData.length;
     const progressPercent = isEndScreen ? 100 : (currentSlideIndex / currentSessionData.length) * 100;
