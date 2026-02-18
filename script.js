@@ -19,10 +19,10 @@ async function initApp() {
         const response = await fetch('dzikir.json');
         fullData = await response.json();
         setupTouchEvents();
-        
+
         // Setup Drag Engine
-        setupSheetDrag('bottom-sheet', 'drag-area');       
-        setupSheetDrag('info-sheet', 'info-drag-area');    
+        setupSheetDrag('bottom-sheet', 'drag-area');
+        setupSheetDrag('info-sheet', 'info-drag-area');
 
         restoreState();
 
@@ -41,6 +41,7 @@ function startClock() {
 
         const hour = now.getHours();
         const greetingEl = document.getElementById('greeting-text');
+
         if (hour >= 3 && hour < 11) greetingEl.innerText = "Selamat Pagi";
         else if (hour >= 11 && hour < 15) greetingEl.innerText = "Selamat Siang";
         else if (hour >= 15 && hour < 18) greetingEl.innerText = "Selamat Petang";
@@ -81,7 +82,7 @@ function restoreState() {
 // 4. Navigasi Antar Tampilan
 function openDzikir(session, targetIndex = 0) {
     activeSession = session;
-    closeAllSheets(); 
+    closeAllSheets();
 
     document.getElementById('info-sheet').style.display = 'none';
 
@@ -111,9 +112,9 @@ function closeDzikir() {
     document.getElementById('dzikir-view').classList.remove('active');
     document.getElementById('home-view').classList.add('active');
     document.body.className = '';
-    
-    closeAllSheets(); 
-    
+
+    closeAllSheets();
+
     document.getElementById('bottom-sheet').style.display = 'none';
     document.getElementById('info-sheet').style.display = 'flex';
 
@@ -330,7 +331,6 @@ function incrementCounter() {
 function nextSlide() {
     if (currentSlideIndex < currentSessionData.length) {
         currentSlideIndex++;
-        // PERBAIKAN: Paksa browser mengaktifkan transisi sebelum bergeser
         document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -340,7 +340,6 @@ function nextSlide() {
 function prevSlide() {
     if (currentSlideIndex > 0) {
         currentSlideIndex--;
-        // PERBAIKAN: Paksa browser mengaktifkan transisi sebelum bergeser
         document.getElementById('slider-track').style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s ease';
         updateUI();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -395,7 +394,7 @@ function setupSheetDrag(sheetId, dragAreaId) {
         }
 
         sheet.style.transform = '';
-        checkOverlay(); 
+        checkOverlay();
     };
 
     dragArea.addEventListener('mousedown', onStartSheet);
