@@ -1,6 +1,3 @@
-/* =========================================
-   IMPORT FONT LOKAL
-   ========================================= */
 @font-face {
     font-family: 'hafs';
     src: url('./hafs.woff2') format('woff2');
@@ -9,9 +6,6 @@
     font-display: swap;
 }
 
-/* =========================================
-   CSS VARIABLES & TEMA DASAR
-   ========================================= */
 :root {
     --bg-body: #e2e8f0;
     --bg-app: #f8fafc;
@@ -23,9 +17,6 @@
     --nav-bg: rgba(255, 255, 255, 0.95);
 }
 
-/* =========================================
-   TEMA DZIKIR PAGI (NUANSA BIRU)
-   ========================================= */
 body.theme-pagi {
     --bg-app: #e0f2fe;
     --text-main: #0f172a;
@@ -46,11 +37,9 @@ body.theme-petang {
     --nav-bg: rgba(30, 41, 59, 0.95);
 }
 
-/* =========================================
-   GLOBAL & LAYOUTING
-   ========================================= */
 body {
-    font-family: 'Mali', 'Comic Sans MS', cursive, system-ui, sans-serif;
+    /* Menggunakan font sistem bawaan agar load instan & offline-ready */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg-body);
     margin: 0;
     padding: 0;
@@ -76,7 +65,6 @@ body {
     transition: background-color 0.4s ease;
 }
 
-/* PERBAIKAN BUG OVERLAP: Hapus !important pada display, ubah cara deteksinya */
 .view-screen {
     display: none;
     width: 100%;
@@ -88,7 +76,7 @@ body {
 }
 
 .view-screen.active.home-layout {
-    display: flex; /* Saat active, tampilkan sebagai flex */
+    display: flex;
 }
 
 @keyframes fadeIn {
@@ -96,43 +84,35 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* =========================================
-   VIEW 1: HOME DASHBOARD (3 BAGIAN)
-   ========================================= */
 .home-layout {
     flex-direction: column;
     height: 100vh;
-    overflow: hidden; /* Dikunci agar beranda tidak bisa di-scroll */
+    overflow: hidden;
 }
 
-/* 1. BAGIAN HEADER (Diselaraskan dengan warna awal Pagi) */
-/* 1. Sesuaikan Header agar warnanya sama dengan warna atas Dzikir Pagi */
 .header-section {
     flex: 0 0 auto;
     padding: 40px 20px 20px 20px;
     text-align: center;
-
-    /* Gunakan warna yang sama persis dengan warna awal gradasi .pagi */
-    background-color: #a1c4fd;
-
-    /* Pastikan tidak ada bayangan atau garis bawah yang memisahkan */
+    background-color: #e0f2fe;
+    color: #0f172a;
+    z-index: 20;
     border-bottom: none;
     box-shadow: none;
     margin-bottom: 0;
-    z-index: 20;
 }
 
 .greeting {
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0 0 5px 0;
-    color: var(--text-main); /* Sebelumnya statis biru gelap */
+    color: #0f172a;
 }
 
 .date-time {
     font-size: 0.9rem;
     font-weight: 500;
-    color: var(--text-muted); /* Agar kontras lebih lembut */
+    color: #475569;
 }
 
 .clock {
@@ -141,10 +121,9 @@ body {
     margin: 5px 0 10px 0;
     letter-spacing: -1px;
     line-height: 1;
-    color: var(--primary); /* Menggunakan warna aksen utama */
+    color: #0284c7;
 }
 
-/* WADAH BAGIAN PAGI & PETANG */
 .split-areas {
     flex: 1;
     display: flex;
@@ -166,14 +145,9 @@ body {
     filter: brightness(0.9);
 }
 
-/* 2. AREA PAGI (BIRU) */
 .pagi {
-    /* Pastikan tidak ada jarak (margin) di bagian atas */
     margin-top: 0;
-
-    /* Gradasi dimulai dari warna yang sama dengan header-section (#a1c4fd) */
-    background: linear-gradient(180deg, #a1c4fd 0%, #e0f2fe 100%);
-
+    background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
     color: #0f172a;
     display: flex;
     flex-direction: column;
@@ -187,13 +161,17 @@ body {
     background: rgba(255, 255, 255, 0.45);
 }
 
-/* 3. AREA PETANG (ORANYE) */
 .petang {
     background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
     color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Modifikasi objek matahari menjadi bulan sabit (moon) khusus di area petang */
 .petang .sun {
     background-color: transparent;
     box-shadow: inset -15px -15px 0 0 rgba(255, 255, 255, 0.8);
@@ -204,7 +182,6 @@ body {
     transform: translate(-50%, -50%) scale(1.1) rotate(-15deg);
 }
 
-/* KONTEN UTAMA TOMBOL (Matahari & Teks) */
 .content-wrapper {
     position: relative;
     display: flex;
@@ -253,7 +230,6 @@ body {
     text-transform: capitalize;
 }
 
-/* ANIMASI OMBAK */
 .waves-junction {
     position: absolute;
     bottom: 0;
@@ -290,9 +266,6 @@ body {
 .layer3 { animation: waveLeft 18s linear infinite; height: 75%; }
 .layer4 { animation: waveRight 15s linear infinite; height: 60%; }
 
-/* =========================================
-   VIEW 2: STICKY PROGRESS AREA
-   ========================================= */
 .sticky-wrapper {
     position: sticky;
     top: 0;
@@ -326,7 +299,6 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: center;
-    font-family: system-ui, sans-serif;
 }
 
 .progress-container { padding: 0 25px 15px; }
@@ -339,7 +311,6 @@ body {
     text-transform: uppercase;
     display: flex;
     justify-content: space-between;
-    font-family: system-ui, sans-serif;
 }
 
 .progress-bar {
@@ -356,15 +327,7 @@ body {
     transition: width 0.4s ease;
 }
 
-/* =========================================
-   SLIDER AREA & CARDS
-   ========================================= */
-.slider-viewport {
-    width: 100%;
-    overflow: hidden;
-    padding-top: 20px;
-    padding-bottom: 120px;
-}
+.slider-viewport { width: 100%; overflow: hidden; padding-top: 20px; padding-bottom: 120px;}
 
 .slider-track {
     display: flex;
@@ -408,7 +371,6 @@ body {
     border-bottom: 1px dashed var(--border-color);
     padding-bottom: 15px;
     font-weight: 700;
-    font-family: system-ui, sans-serif;
 }
 
 .read-count-label {
@@ -421,30 +383,12 @@ body {
 
 .arabic {
     font-family: 'hafs', serif;
-    font-size: 2.6rem; /* Diperbesar sedikit agar lebih ramah baca */
+    font-size: 2.6rem;
     text-align: right;
-    line-height: 2.1; /* Dikurangi dari 2.5 agar tidak terlalu berjarak */
+    line-height: 2.1;
     color: var(--text-main);
     margin-bottom: 25px;
     direction: rtl;
-}
-
-.latin-text {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    margin-bottom: 30px;
-    text-align: center;
-    font-style: italic;
-    color: var(--primary); /* Berikan warna primary agar lebih menonjol untuk dibaca */
-    font-weight: 500;
-}
-
-.translation-text {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    margin-bottom: 30px;
-    text-align: center;
-    color: var(--text-muted); /* Gunakan teks redup agar fokus pengguna tertuju pada lafaz/latinnya */
 }
 
 .section-label {
@@ -458,12 +402,9 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     margin: 0 auto 12px auto;
-    font-family: system-ui, sans-serif;
 }
 
-body.theme-pagi .section-label {
-    background: rgba(2, 132, 199, 0.1);
-}
+body.theme-pagi .section-label { background: rgba(2, 132, 199, 0.1); }
 body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .latin-text, .translation-text {
@@ -471,13 +412,11 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     line-height: 1.7;
     margin-bottom: 30px;
     text-align: center;
-    font-family: system-ui, sans-serif;
 }
-.latin-text { font-style: italic; color: var(--text-muted); }
 
-/* =========================================
-   BOTTOM NAVIGATION & COUNTER FAB
-   ========================================= */
+.latin-text { font-style: italic; color: var(--primary); font-weight: 500; }
+.translation-text { color: var(--text-muted); }
+
 .bottom-nav {
     position: fixed;
     bottom: 50px;
@@ -496,7 +435,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 .nav-btn, .counter-fab {
     pointer-events: auto;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    font-family: system-ui, sans-serif;
 }
 
 .nav-btn {
@@ -537,10 +475,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 .counter-fab.done { background: var(--text-muted); cursor: default; box-shadow: none; }
 .counter-fab .count-label { font-size: 0.7rem; font-weight: 500; opacity: 0.9; }
 
-/* =========================================
-   BOTTOM SHEET & OVERLAY
-   ========================================= */
-
 .sheet-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -565,7 +499,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     margin: 0 auto;
     width: 100%;
     max-width: 480px;
-
     background: var(--nav-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
@@ -575,7 +508,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
     z-index: 120;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-
     transform: translateY(calc(100% - 50px));
     display: flex;
     flex-direction: column;
@@ -620,7 +552,7 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     overflow-y: auto;
 }
 
-.dalil-text, .ref-box { user-select: text; font-family: system-ui, sans-serif; }
+.dalil-text, .ref-box { user-select: text; }
 
 .sheet-title {
     font-size: 0.9rem;
@@ -629,7 +561,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-family: system-ui, sans-serif;
 }
 
 .dalil-text { font-size: 0.9rem; line-height: 1.6; margin-bottom: 15px; }
@@ -638,26 +569,18 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 .github-link {
     display: inline-block;
     padding: 12px 30px;
-    background-color: var(--primary); /* Diubah agar sinkron dengan tema */
-    color: #ffffff; /* Paksa putih agar selalu terbaca */
+    background-color: var(--primary);
+    color: #ffffff;
     text-decoration: none;
     border-radius: 25px;
     font-weight: 600;
     font-size: 0.95rem;
     transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
-    font-family: system-ui, sans-serif;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Tambahkan shadow agar menonjol */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-.github-link:active {
-    transform: scale(0.95);
-    opacity: 0.9;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+.github-link:active { transform: scale(0.95); opacity: 0.9; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
 
-/* =========================================
-   ANIMASI & LAYAR SUKSES
-   ========================================= */
 @keyframes popSuccess {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -666,12 +589,9 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .pop-anim { animation: popSuccess 0.4s ease forwards; }
 
-.success-screen { text-align: center; padding: 60px 20px; font-family: system-ui, sans-serif;}
+.success-screen { text-align: center; padding: 60px 20px; }
 .success-icon { font-size: 5rem; margin-bottom: 20px; display: inline-block; animation: popSuccess 0.6s ease forwards; }
 
-/* =========================================
-   ANIMASI AWAN (DZIKIR PAGI)
-   ========================================= */
 .cloud {
     position: absolute;
     background: rgba(255, 255, 255, 0.7);
@@ -679,7 +599,7 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     animation: floatCloud linear infinite;
     z-index: 1;
     pointer-events: none;
-    left: -150px; /* Titik awal pasti di luar layar kiri */
+    left: -150px;
 }
 
 .cloud::before, .cloud::after {
@@ -705,44 +625,35 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 @keyframes floatCloud {
     0% { transform: translateX(0); }
-    100% { transform: translateX(800px); } /* Bergerak mulus sejauh 800px ke kanan */
+    100% { transform: translateX(800px); }
 }
 
-/* =========================================
-   ANIMASI BINTANG (DZIKIR PETANG)
-   ========================================= */
 .star {
     position: absolute;
     background-color: #ffffff;
     border-radius: 50%;
-    /* Gunakan normal, jangan alternate, agar siklusnya 0% -> 100% berulang searah */
     animation: twinkle linear infinite;
     z-index: 1;
     pointer-events: none;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-    opacity: 0; /* Pastikan mulai dalam keadaan tidak terlihat */
+    opacity: 0;
 }
 
-/* Animasi dari redup -> terang -> redup lagi */
 @keyframes twinkle {
     0% { opacity: 0; transform: scale(0.5); }
     50% { opacity: 1; transform: scale(1.2); }
     100% { opacity: 0; transform: scale(0.5); }
 }
 
-/* =========================================
-   PERBAIKAN INFO DEVELOPER (TEMA PETANG)
-   ========================================= */
 #info-sheet {
-    background-color: #1e293b; /* Warna background persis dzikir petang */
+    background-color: #1e293b;
     border-top: 1px solid #334155;
 }
 
 #info-sheet .sheet-title {
-    color: #3b82f6; /* Biru terang agar kontras */
+    color: #3b82f6;
 }
 
-/* Mengesampingkan (override) style inline sebelumnya agar teks terbaca di background gelap */
 #info-sheet p {
     color: #e2e8f0 !important;
 }
