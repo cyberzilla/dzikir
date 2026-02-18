@@ -218,5 +218,49 @@
     "translation": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna, dari kejahatan sesuatu yang diciptakan-Nya.",
     "referensi": "HR. Ahmad II/290, At-Tirmidzi no. 3604",
     "dalil": "Barangsiapa membacanya pada sore hari sebanyak 3 kali, maka tidak akan berbahaya baginya sengatan binatang berbisa pada malam itu. (Shahih, diriwayatkan juga oleh Ibnu Sunni dalam 'Amalul Yaum wal Lailah no. 68)."
+  },
+  {
+    "id": "bismillahilladzi",
+    "waktu": "keduanya",
+    "title": "Doa Perlindungan dari Segala Bahaya",
+    "target_baca": 3,
+    "arabic": "بِسْمِ اللَّهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلاَ فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+    "latin": "Bismillahilladzii laa yadhurru ma'asmihii syai-un fil ardhi wa laa fis-samaa' wa Huwas-Samii'ul 'Aliim.",
+    "translation": "Dengan menyebut nama Allah yang bersama nama-Nya sesuatu apa pun tidak akan celaka baik di bumi maupun di langit. Dan Dia-lah Yang Maha Mendengar lagi Maha Mengetahui.",
+    "referensi": "HR. Abu Dawud no. 5088, At-Tirmidzi no. 3388, Ibnu Majah no. 3869",
+    "dalil": "Barangsiapa membacanya sebanyak tiga kali ketika pagi dan sore hari, maka tidak ada sesuatu pun yang membahayakan dirinya. (Dishahihkan oleh Syaikh Al-Albani dalam Shahiih Ibni Majah)."
+  },
+  {
+    "id": "radhiitu_billahi",
+    "waktu": "keduanya",
+    "title": "Doa Ridha Kepada Allah, Islam, dan Rasulullah",
+    "target_baca": 3,
+    "arabic": "رَضِيْتُ بِاللهِ رَبًّا، وَبِالْإِسْلَامِ دِيْنًا، وَبِمُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+    "latin": "Radhiitu billaahi Rabbaa, wa bil-Islaami diinaa, wa bi-Muhammadin shallallaahu 'alaihi wa sallama nabiyyaa.",
+    "translation": "Aku ridha Allah sebagai Rabb, Islam sebagai agama, dan Muhammad shallallahu 'alaihi wa sallam sebagai Nabi.",
+    "referensi": "HR. Abu Dawud no. 5072, At-Tirmidzi no. 3389",
+    "dalil": "Barangsiapa mengucapkan dzikir ini tiga kali di waktu pagi dan sore, maka pasti Allah akan meridhainya pada hari Kiamat. (Syaikh Al-Albani menilai riwayat ini hasan lighairihi dalam Shahiih At-Targhiib wat Tarhiib 1/415)."
+  },
+  {
+    "id": "allahumma_aalimal_ghaibi",
+    "waktu": "keduanya",
+    "title": "Doa Perlindungan dari Syirik dan Hawa Nafsu",
+    "target_baca": 1,
+    "arabic": "اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ",
+    "latin": "Allahumma 'Aalimal ghaibi wasy-syahaadati faathiras-samaawaati wal ardh, Rabba kulli syai-in wa maliikah, asyhadu an laa ilaaha illaa Anta, a'uudzu bika min syarri nafsii, wa min syarrisy-syaithaani wa syirkihi, wa an aqtarifa 'alaa nafsii suu-an au ajurrahu ilaa muslim.",
+    "translation": "Ya Allah, Yang Maha Mengetahui yang ghaib dan yang nyata, wahai Pencipta langit dan bumi, Rabb segala sesuatu dan Yang Merajainya. Aku bersaksi bahwa tidak ada Ilah yang berhak diibadahi dengan benar kecuali Engkau. Aku berlindung kepada-Mu dari kejahatan diriku, syaitan dan balatentaranya (godaan untuk berbuat syirik pada-Mu), dan aku berlindung kepada-Mu dari berbuat kejelekan terhadap diriku atau menyeretnya kepada seorang muslim.",
+    "referensi": "HR. At-Tirmidzi no. 3392 dan Abu Dawud no. 5067",
+    "dalil": "Doa yang diajarkan Rasulullah ﷺ kepada Abu Bakar Ash-Shiddiq radhiyallahu 'anhu untuk dibaca pada waktu pagi dan petang. (Dishahihkan oleh Syaikh Al-Albani dalam Shahiih Abi Dawud)."
+  },
+  {
+    "id": "hasbiyallahu_laa_ilaaha",
+    "waktu": "keduanya",
+    "title": "Doa Kecukupan Urusan (Hasballah)",
+    "target_baca": 7,
+    "arabic": "حَسْبِيَ اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+    "latin": "Hasbiyallahu laa ilaaha illaa Huwa 'alaihi tawakkaltu wa Huwa Rabbul 'arsyil 'azhiim.",
+    "translation": "Cukuplah Allah bagiku; tidak ada Ilah yang berhak diibadahi dengan benar selain Dia. Hanya kepada-Nya aku bertawakkal dan Dia adalah Rabb yang memiliki 'Arsy yang agung.",
+    "referensi": "HR. Ibnu As-Sunni no. 71, Abu Dawud 4/321",
+    "dalil": "Barangsiapa yang membacanya sebanyak tujuh kali ketika pagi dan sore hari, maka Allah akan mencukupinya dari apa yang menyusahkannya dari urusan dunia dan akhirat. (Hadits shahih riwayat Abu Dawud, disahihkan jalurnya oleh Syaikh Syu'aib Al-Arnauth)."
   }
 ]
