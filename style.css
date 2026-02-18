@@ -47,7 +47,7 @@ body.theme-petang {
    GLOBAL & LAYOUTING
    ========================================= */
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: 'Mali', 'Comic Sans MS', cursive, system-ui, sans-serif;
     background-color: var(--bg-body);
     margin: 0;
     padding: 0;
@@ -58,8 +58,6 @@ body {
     overflow-x: hidden;
     scrollbar-width: none;
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
@@ -75,6 +73,7 @@ body {
     transition: background-color 0.4s ease;
 }
 
+/* PERBAIKAN BUG OVERLAP: Hapus !important pada display, ubah cara deteksinya */
 .view-screen {
     display: none;
     width: 100%;
@@ -85,87 +84,184 @@ body {
     display: block;
 }
 
+.view-screen.active.home-layout {
+    display: flex; /* Saat active, tampilkan sebagai flex */
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================================
-   VIEW 1: HOME DASHBOARD
+   VIEW 1: HOME DASHBOARD (3 BAGIAN)
    ========================================= */
-#home-view {
-    padding: 40px 25px;
-    box-sizing: border-box;
+.home-layout {
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden; /* Dikunci agar beranda tidak bisa di-scroll */
 }
 
-.header-home {
+/* 1. BAGIAN HEADER (Diselaraskan dengan warna awal Pagi) */
+.header-section {
+    flex: 0 0 auto;
+    padding: 40px 20px 20px 20px;
     text-align: center;
-    margin-bottom: 50px;
+    background-color: #a1c4fd; /* Sama dengan titik awal linear-gradient pagi */
+    color: #1b4965; /* Warna font gelap agar kontras */
+    z-index: 20;
 }
 
 .greeting {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin: 0 0 8px 0;
+    margin: 0 0 5px 0;
+    color: #1b4965;
 }
 
 .date-time {
-    font-size: 0.95rem;
-    color: var(--text-muted);
+    font-size: 0.9rem;
     font-weight: 500;
+    color: #1b4965;
+    opacity: 0.8;
 }
 
 .clock {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 700;
-    color: var(--primary);
-    margin: 15px 0;
-    letter-spacing: -2px;
+    margin: 5px 0 10px 0;
+    letter-spacing: -1px;
     line-height: 1;
+    color: #0c4a6e;
 }
 
-.big-btn {
-    width: 100%;
-    border: none;
-    border-radius: 24px;
-    padding: 30px 25px;
-    margin-bottom: 25px;
+/* WADAH BAGIAN PAGI & PETANG */
+.split-areas {
+    flex: 1;
     display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.area {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: filter 0.2s ease;
 }
 
-.big-btn:active { transform: scale(0.95); }
-
-.btn-pagi {
-    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
-    color: white;
-    box-shadow: 0 15px 30px rgba(234, 88, 12, 0.25);
+.area:active {
+    filter: brightness(0.9);
 }
 
-.btn-petang {
-    background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
-    color: white;
-    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.25);
+/* 2. AREA PAGI (BIRU) */
+.pagi {
+    background: linear-gradient(180deg, #a1c4fd 0%, #c2e9fb 100%);
+    color: #1b4965;
 }
 
-.btn-icon {
-    font-size: 3rem;
-    margin-right: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+.pagi .sun {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+/* 3. AREA PETANG (ORANYE) */
+.petang {
+    background: linear-gradient(180deg, #ffb75e 0%, #ffcf70 100%);
+    color: #5c2a00;
+}
+
+.petang .sun {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* KONTEN UTAMA TOMBOL (Matahari & Teks) */
+.content-wrapper {
+    position: relative;
     display: flex;
-    align-items: center;
     justify-content: center;
-    backdrop-filter: blur(5px);
+    align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
-.btn-text { text-align: left; }
-.btn-text h2 { margin: 0; font-size: 1.4rem; font-weight: 700; }
-.btn-text p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
+.sun {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.area:hover .sun {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.text-box {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    transform: translateY(-5px);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    margin-right: -0.3em;
+    margin-bottom: -5px;
+    text-transform: lowercase;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: capitalize;
+}
+
+/* ANIMASI OMBAK */
+.waves-junction {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 14vh;
+    z-index: 10;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.wave-svg {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    transform-origin: bottom center;
+    display: block;
+}
+
+@keyframes waveLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes waveRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+}
+
+.layer1 { animation: waveLeft 25s linear infinite; height: 100%; }
+.layer2 { animation: waveRight 20s linear infinite; height: 85%; }
+.layer3 { animation: waveLeft 18s linear infinite; height: 75%; }
+.layer4 { animation: waveRight 15s linear infinite; height: 60%; }
 
 /* =========================================
    VIEW 2: STICKY PROGRESS AREA
@@ -203,6 +299,7 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: center;
+    font-family: system-ui, sans-serif;
 }
 
 .progress-container { padding: 0 25px 15px; }
@@ -215,6 +312,7 @@ body {
     text-transform: uppercase;
     display: flex;
     justify-content: space-between;
+    font-family: system-ui, sans-serif;
 }
 
 .progress-bar {
@@ -234,7 +332,7 @@ body {
 /* =========================================
    SLIDER AREA & CARDS
    ========================================= */
-.slider-viewport { width: 100%; overflow: hidden; padding-top: 20px; }
+.slider-viewport { width: 100%; overflow: hidden; padding-top: 20px; padding-bottom: 120px;}
 
 .slider-track {
     display: flex;
@@ -255,7 +353,6 @@ body {
     opacity: 0.4;
     transform: scale(0.92);
     transition: all 0.4s ease;
-    margin-bottom: 120px;
 }
 
 .slide-card.active-slide {
@@ -279,6 +376,7 @@ body {
     border-bottom: 1px dashed var(--border-color);
     padding-bottom: 15px;
     font-weight: 700;
+    font-family: system-ui, sans-serif;
 }
 
 .read-count-label {
@@ -310,6 +408,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     margin: 0 auto 12px auto;
+    font-family: system-ui, sans-serif;
 }
 
 body.theme-pagi .section-label { background: rgba(234, 88, 12, 0.1); }
@@ -320,6 +419,7 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     line-height: 1.7;
     margin-bottom: 30px;
     text-align: center;
+    font-family: system-ui, sans-serif;
 }
 .latin-text { font-style: italic; color: var(--text-muted); }
 
@@ -344,6 +444,7 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 .nav-btn, .counter-fab {
     pointer-events: auto;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    font-family: system-ui, sans-serif;
 }
 
 .nav-btn {
@@ -423,7 +524,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     z-index: 120;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 
-    /* DIKEMBALIKAN KE 50px */
     transform: translateY(calc(100% - 50px));
     display: flex;
     flex-direction: column;
@@ -436,13 +536,11 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .drag-area {
     width: 100%;
-    /* DIKEMBALIKAN KE 50px */
     height: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* JARAK DIRAPATKAN */
     gap: 5px;
     cursor: pointer;
     flex-shrink: 0;
@@ -459,9 +557,8 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     opacity: 0.4;
 }
 
-/* MODIFIKASI UNTUK ICON EMOJI KOPI */
 .info-drag-text {
-    font-size: 1.1rem; /* Ukuran dibesarkan sedikit karena berubah jadi emoji */
+    font-size: 1.1rem;
     color: var(--text-muted);
     opacity: 0.8;
 }
@@ -471,7 +568,7 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     overflow-y: auto;
 }
 
-.dalil-text, .ref-box { user-select: text; }
+.dalil-text, .ref-box { user-select: text; font-family: system-ui, sans-serif; }
 
 .sheet-title {
     font-size: 0.9rem;
@@ -480,6 +577,7 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-family: system-ui, sans-serif;
 }
 
 .dalil-text { font-size: 0.9rem; line-height: 1.6; margin-bottom: 15px; }
@@ -495,6 +593,7 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     font-weight: 600;
     font-size: 0.95rem;
     transition: transform 0.2s ease, opacity 0.2s ease;
+    font-family: system-ui, sans-serif;
 }
 
 .github-link:active { transform: scale(0.95); opacity: 0.9; }
@@ -510,5 +609,5 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .pop-anim { animation: popSuccess 0.4s ease forwards; }
 
-.success-screen { text-align: center; padding: 60px 20px; }
+.success-screen { text-align: center; padding: 60px 20px; font-family: system-ui, sans-serif;}
 .success-icon { font-size: 5rem; margin-bottom: 20px; display: inline-block; animation: popSuccess 0.6s ease forwards; }

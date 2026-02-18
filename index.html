@@ -6,12 +6,16 @@
     <title>Pagar Harian Muslim</title>
 
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0ea5e9">
+    <meta name="theme-color" content="#a1c4fd">
     <link rel="apple-touch-icon" href="icon-192.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="description" content="Aplikasi Pagar Harian Muslim untuk Dzikir Pagi dan Petang">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,33 +25,54 @@
 
     <div id="sheet-overlay" class="sheet-overlay" onclick="closeAllSheets()"></div>
 
-    <div id="home-view" class="view-screen active">
-        <div class="header-home">
+    <div id="home-view" class="view-screen active home-layout">
+
+        <div class="header-section">
             <h1 class="greeting" id="greeting-text">Assalamu'alaikum</h1>
             <div class="date-time" id="date-text">...</div>
             <div class="clock" id="clock-text">00:00</div>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">Perkuat perisai spiritual Anda hari ini.</p>
+            <p style="color: #1b4965; opacity: 0.8; font-size: 0.85rem; font-family: system-ui, sans-serif;">Perkuat perisai spiritual Anda hari ini.</p>
         </div>
 
-        <button class="big-btn btn-pagi" onclick="openDzikir('pagi')">
-            <div class="btn-icon">🌅</div>
-            <div class="btn-text">
-                <h2>Dzikir Pagi</h2>
-                <p>Pagar diri di awal hari</p>
-            </div>
-        </button>
+        <div class="split-areas">
+            <div class="area pagi" onclick="openDzikir('pagi')">
+                <div class="content-wrapper">
+                    <div class="sun"></div>
+                    <div class="text-box">
+                        <div class="subtitle">dzikir</div>
+                        <div class="title">Pagi</div>
+                    </div>
+                </div>
 
-        <button class="big-btn btn-petang" onclick="openDzikir('petang')">
-            <div class="btn-icon">🌃</div>
-            <div class="btn-text">
-                <h2>Dzikir Petang</h2>
-                <p>Perisai diri di waktu malam</p>
+                <div class="waves-junction">
+                    <svg class="wave-svg layer1" viewBox="0 0 2000 150" preserveAspectRatio="none">
+                        <path d="M0,50 Q250,-10 500,50 T1000,50 Q1250,-10 1500,50 T2000,50 V150 H0 Z" fill="#1e3a8a" />
+                    </svg>
+                    <svg class="wave-svg layer2" viewBox="0 0 2000 150" preserveAspectRatio="none">
+                        <path d="M0,70 Q250,130 500,70 T1000,70 Q1250,130 1500,70 T2000,70 V150 H0 Z" fill="rgba(37, 99, 235, 0.8)" />
+                    </svg>
+                    <svg class="wave-svg layer3" viewBox="0 0 2000 150" preserveAspectRatio="none">
+                        <path d="M0,40 Q250,100 500,40 T1000,40 Q1250,100 1500,40 T2000,40 V150 H0 Z" fill="rgba(234, 88, 12, 0.8)" />
+                    </svg>
+                    <svg class="wave-svg layer4" viewBox="0 0 2000 150" preserveAspectRatio="none">
+                        <path d="M0,80 Q250,20 500,80 T1000,80 Q1250,20 1500,80 T2000,80 V150 H0 Z" fill="#ffb75e" />
+                    </svg>
+                </div>
             </div>
-        </button>
+
+            <div class="area petang" onclick="openDzikir('petang')">
+                <div class="content-wrapper">
+                    <div class="sun"></div>
+                    <div class="text-box">
+                        <div class="subtitle">dzikir</div>
+                        <div class="title">Petang</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="dzikir-view" class="view-screen">
-
         <div class="sticky-wrapper">
             <div class="dzikir-header">
                 <button class="back-btn" onclick="closeDzikir()">❮</button>
@@ -80,7 +105,6 @@
 
             <button class="nav-btn" id="btn-next" onclick="nextSlide()">❯</button>
         </div>
-
     </div>
 
     <div class="bottom-sheet" id="info-sheet">
@@ -90,8 +114,8 @@
         </div>
 
         <div class="sheet-content" style="text-align: center; padding-top: 5px; padding-bottom: 30px;">
-            <h3 class="sheet-title" style="margin-bottom: 15px;">By Cyberzilla</h3>
-            <p style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6;">
+            <h3 class="sheet-title" style="margin-bottom: 15px;">Informasi Developer</h3>
+            <p style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.6; font-family: system-ui, sans-serif;">
                 Aplikasi <strong>Pagar Harian Muslim</strong> dikembangkan secara mandiri untuk memudahkan umat Islam dalam merutinkan dzikir pagi dan petang.
             </p>
             <a href="https://github.com/cyberzilla/dzikir" target="_blank" rel="noopener noreferrer" class="github-link">
