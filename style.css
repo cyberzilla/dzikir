@@ -6,6 +6,20 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'naskh';
+    src: url('./naskh.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+body.font-hafs .arabic { font-family: 'hafs', serif; }
+body.font-naskh .arabic { font-family: 'naskh', serif; }
+
+.hide-latin .latin-section { display: none !important; }
+.hide-terjemah .terjemah-section { display: none !important; }
+
 :root {
     --bg-body: #e2e8f0;
     --bg-app: #f8fafc;
@@ -15,6 +29,7 @@
     --card-bg: #ffffff;
     --border-color: #e2e8f0;
     --nav-bg: rgba(255, 255, 255, 0.95);
+    --arabic-font-size: 2.6rem;
 }
 
 body.theme-pagi {
@@ -38,7 +53,6 @@ body.theme-petang {
 }
 
 body {
-    /* Menggunakan font sistem bawaan agar load instan & offline-ready */
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg-body);
     margin: 0;
@@ -122,6 +136,9 @@ body {
     letter-spacing: -1px;
     line-height: 1;
     color: #0284c7;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
 }
 
 .split-areas {
@@ -280,25 +297,32 @@ body {
     padding: 15px 20px;
     display: flex;
     align-items: center;
-}
-
-.back-btn {
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-main);
-    cursor: pointer;
-    padding: 5px;
-    position: absolute;
-    left: 15px;
+    justify-content: space-between;
+    position: relative;
 }
 
 .dzikir-header h1 {
     margin: 0;
-    width: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 1.1rem;
     font-weight: 600;
     text-align: center;
+    width: max-content;
+    z-index: 1;
+}
+
+.back-btn, .settings-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
 }
 
 .progress-container { padding: 0 25px 15px; }
@@ -382,13 +406,13 @@ body {
 }
 
 .arabic {
-    font-family: 'hafs', serif;
-    font-size: 2.6rem;
+    font-size: var(--arabic-font-size);
     text-align: right;
     line-height: 2.1;
     color: var(--text-main);
     margin-bottom: 25px;
     direction: rtl;
+    transition: font-size 0.3s ease;
 }
 
 .section-label {
@@ -541,12 +565,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     opacity: 0.4;
 }
 
-.info-drag-text {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    opacity: 0.8;
-}
-
 .sheet-content {
     padding: 0 25px 25px;
     overflow-y: auto;
@@ -645,23 +663,169 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     100% { opacity: 0; transform: scale(0.5); }
 }
 
+/* ========================================= */
+/* Penyesuaian Style Tab dan Info Sheet Dinamis */
+/* ========================================= */
+
 #info-sheet {
-    background-color: #1e293b;
+    z-index: 130;
+    background: #1e293b;
     border-top: 1px solid #334155;
 }
 
+/* Warna elemen default di Home Screen (Gelap) */
+#info-sheet p, #info-sheet .setting-item label {
+    color: #f8fafc !important;
+}
 #info-sheet .sheet-title {
     color: #3b82f6;
 }
-
-#info-sheet p {
-    color: #e2e8f0 !important;
+#info-sheet .setting-item {
+    border-bottom: 1px solid #334155;
 }
 
-#info-sheet .info-drag-text {
-    color: #94a3b8;
+/* Base style Select Inputs untuk Home (Gelap) */
+#info-sheet #font-select, #info-sheet #clock-format {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #475569;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    font-family: inherit;
+    min-width: 100px;
 }
 
-#info-sheet .drag-handle {
+/* Style tombol kontrol font size */
+.font-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.font-size-btn {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.font-size-btn:active {
+    transform: scale(0.9);
+}
+
+/* Override saat masuk ke mode baca (Pagi/Petang) sehingga mengikuti variabel tema saat ini */
+body.theme-pagi #info-sheet, body.theme-petang #info-sheet {
+    background: var(--nav-bg);
+    border-top: 1px solid var(--border-color);
+}
+body.theme-pagi #info-sheet p, body.theme-pagi #info-sheet .setting-item label,
+body.theme-petang #info-sheet p, body.theme-petang #info-sheet .setting-item label {
+    color: var(--text-main) !important;
+}
+body.theme-pagi #info-sheet .sheet-title, body.theme-petang #info-sheet .sheet-title {
+    color: var(--primary);
+}
+body.theme-pagi #info-sheet .setting-item, body.theme-petang #info-sheet .setting-item {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Memastikan Select, Clock format, dan Font Size Controls di mode Pagi/Petang merender warna yang tepat dan terlihat (terutama saat petang) */
+body.theme-pagi #info-sheet #font-select, body.theme-petang #info-sheet #font-select,
+body.theme-pagi #info-sheet #clock-format, body.theme-petang #info-sheet #clock-format,
+body.theme-pagi #info-sheet .font-size-btn, body.theme-petang #info-sheet .font-size-btn {
+    background-color: var(--card-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+/* Styling Tabs di tengah vertikal & horizontal */
+.sheet-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab-btn.active {
+    opacity: 1;
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.setting-item:last-child {
+    border-bottom: none !important;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
     background-color: #64748b;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
 }

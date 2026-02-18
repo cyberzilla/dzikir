@@ -62,8 +62,13 @@
     <div id="dzikir-view" class="view-screen">
         <div class="sticky-wrapper">
             <div class="dzikir-header">
-                <button class="back-btn" onclick="closeDzikir()">❮</button>
+                <button class="back-btn" onclick="closeDzikir()">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </button>
                 <h1 id="dzikir-header-title">Dzikir</h1>
+                <button class="settings-btn" onclick="openSettings()">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </button>
             </div>
             <div class="progress-container">
                 <div class="progress-text" id="progress-text">
@@ -88,13 +93,21 @@
             <button class="nav-btn" id="btn-next" onclick="nextSlide()">❯</button>
         </div>
     </div>
+
     <div class="bottom-sheet" id="info-sheet">
         <div class="drag-area" id="info-drag-area">
-            <div class="drag-handle"></div>
-            <span class="info-drag-text">☕</span>
+            <div class="sheet-tabs">
+                <button id="tab-info" class="tab-btn active" onclick="switchTab('info')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                </button>
+                <button id="tab-settings" class="tab-btn" onclick="switchTab('settings')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </button>
+            </div>
         </div>
-        <div class="sheet-content" style="text-align: center; padding-top: 5px; padding-bottom: 30px;">
-            <h3 class="sheet-title" style="margin-bottom: 15px;">Informasi Developer</h3>
+
+        <div class="sheet-content" id="content-info" style="text-align: center; padding-top: 5px; padding-bottom: 30px;">
+            <h3 class="sheet-title" style="margin-bottom: 15px;">Tentang Aplikasi</h3>
             <p style="font-size: 0.9rem; margin-bottom: 25px; line-height: 1.6;">
                 Aplikasi <strong>Pagar Harian Muslim</strong> dikembangkan secara mandiri untuk memudahkan umat Islam dalam merutinkan dzikir pagi dan petang.
             </p>
@@ -102,7 +115,48 @@
                 Lihat di GitHub
             </a>
         </div>
+
+        <div class="sheet-content" id="content-settings" style="display: none; padding-top: 5px; padding-bottom: 30px;">
+            <h3 class="sheet-title" style="margin-bottom: 15px; text-align: center;">Pengaturan</h3>
+            <div class="setting-item">
+                <label>Pilih Font Arabic</label>
+                <div class="font-controls">
+                    <button class="font-size-btn" onclick="changeFontSize(-0.2)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                    <select id="font-select" onchange="updateSettings()">
+                        <option value="hafs">Hafs</option>
+                        <option value="naskh">Naskh</option>
+                    </select>
+                    <button class="font-size-btn" onclick="changeFontSize(0.2)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label>Tampilkan Teks Latin</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-latin" onchange="updateSettings()" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label>Tampilkan Terjemah</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-terjemah" onchange="updateSettings()" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label>Format Waktu</label>
+                <select id="clock-format" onchange="updateSettings()">
+                    <option value="24">24 Jam</option>
+                    <option value="12">12 Jam (AM/PM)</option>
+                </select>
+            </div>
+        </div>
     </div>
+
     <div class="bottom-sheet" id="bottom-sheet" style="display: none;">
         <div class="drag-area" id="drag-area">
             <div class="drag-handle"></div>

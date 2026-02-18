@@ -8,7 +8,16 @@ let isDragging = false;
 let startX = 0;
 let initialTranslatePx = 0;
 
+let appSettings = {
+    font: 'hafs',
+    showLatin: true,
+    showTerjemah: true,
+    clockFormat: '24', // default format
+    arabicSize: 2 // ukuran font default dalam rem
+};
+
 async function initApp() {
+    loadSettings(); // Memuat pengaturan terlebih dahulu agar jam dirender dengan format yang tepat sejak detik awal
     startClock();
     checkAndResetDailyProgress();
     registerServiceWorker();
@@ -34,7 +43,28 @@ async function initApp() {
 function startClock() {
     setInterval(() => {
         const now = new Date();
-        document.getElementById('clock-text').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+        // Memformat jam sesuai dengan pengaturan (12 atau 24 jam)
+        let h = now.getHours();
+        let m = now.getMinutes();
+        let ampm = '';
+
+        if (appSettings.clockFormat === '12') {
+            ampm = h >= 12 ? ' PM' : ' AM';
+            h = h % 12;
+            h = h ? h : 12; // Jam '0' menjadi '12'
+        } else {
+            h = h < 10 ? '0' + h : h; // Menambahkan '0' padding jika 24 jam
+        }
+
+        m = m < 10 ? '0' + m : m;
+
+        let timeString = h + ':' + m;
+        if (ampm !== '') {
+            timeString += `<span style="font-size: 1.2rem; margin-left: 5px;">${ampm}</span>`;
+        }
+
+        document.getElementById('clock-text').innerHTML = timeString;
         document.getElementById('date-text').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
 
         const hour = now.getHours();
@@ -84,6 +114,7 @@ function openDzikir(session, targetIndex = 0) {
     document.getElementById('home-view').classList.remove('active');
     document.getElementById('dzikir-view').classList.add('active');
     document.body.className = 'theme-' + session;
+    applySettings();
 
     const headerTitle = session === 'pagi' ? 'Dzikir Pagi' : 'Dzikir Petang';
     document.getElementById('dzikir-header-title').innerText = headerTitle;
@@ -107,8 +138,15 @@ function closeDzikir() {
     document.getElementById('dzikir-view').classList.remove('active');
     document.getElementById('home-view').classList.add('active');
     document.body.className = '';
+    applySettings();
 
     closeAllSheets();
+
+    // Munculkan kembali icon kopi (Info Developer) saat kembali ke halaman depan
+    document.getElementById('tab-info').style.display = '';
+
+    // FALSE: tidak memaksa panel terbuka saat pindah tab info kembali
+    switchTab('info', false);
 
     document.getElementById('bottom-sheet').style.display = 'none';
     document.getElementById('info-sheet').style.display = 'flex';
@@ -119,12 +157,30 @@ function closeDzikir() {
 }
 
 function checkOverlay() {
-    const anyExpanded = document.querySelectorAll('.bottom-sheet.expanded').length > 0;
+    const infoExpanded = document.getElementById('info-sheet').classList.contains('expanded');
+    const dalilExpanded = document.getElementById('bottom-sheet').classList.contains('expanded');
     const overlay = document.getElementById('sheet-overlay');
-    if (anyExpanded) {
+
+    if (infoExpanded || dalilExpanded) {
         overlay.classList.add('active');
     } else {
         overlay.classList.remove('active');
+    }
+
+    // Mengatur z-index overlay agar bisa menggelapkan dalil jika setting terbuka
+    if (infoExpanded) {
+        overlay.style.zIndex = '125';
+    } else {
+        overlay.style.zIndex = '115';
+    }
+
+    // Hilangkan panel setting/info sepenuhnya saat ditutup di halaman Dzikir (mencegah tab button tumpang tindih)
+    if (!infoExpanded) {
+        setTimeout(() => {
+            if (document.getElementById('dzikir-view').classList.contains('active') && !document.getElementById('info-sheet').classList.contains('expanded')) {
+                document.getElementById('info-sheet').style.display = 'none';
+            }
+        }, 400);
     }
 }
 
@@ -148,10 +204,14 @@ function buildSlides() {
             <div class="card-content">
                 <h2 class="dzikir-title">${item.title} <span class="read-count-label">Dibaca ${item.target_baca} kali</span></h2>
                 <div class="arabic">${item.arabic}</div>
-                <span class="section-label">Cara Baca</span>
-                <div class="latin-text">${item.latin}</div>
-                <span class="section-label">Artinya</span>
-                <div class="translation-text">${item.translation}</div>
+                <div class="latin-section">
+                    <span class="section-label">Teks Latin</span>
+                    <div class="latin-text">${item.latin}</div>
+                </div>
+                <div class="terjemah-section">
+                    <span class="section-label">Artinya</span>
+                    <div class="translation-text">${item.translation}</div>
+                </div>
             </div>
         `;
         track.appendChild(card);
@@ -373,8 +433,14 @@ function setupSheetDrag(sheetId, dragAreaId) {
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
 
+        // Mencegah interaksi drag dan klik agar tidak bertabrakan
+        const isBtn = e.target.closest('button') || e.target.closest('a') || e.target.closest('svg');
+
         if (Math.abs(diff) < 15) {
-            sheet.classList.toggle('expanded');
+            // Jika diklik dan area tersebut bukan tombol tab
+            if (!isBtn) {
+                sheet.classList.toggle('expanded');
+            }
         } else {
             if (isExpanded && diff > 50) sheet.classList.remove('expanded');
             else if (!isExpanded && diff < -50) sheet.classList.add('expanded');
@@ -461,6 +527,103 @@ function createStars() {
 
         petangArea.appendChild(star);
     }
+}
+
+function loadSettings() {
+    const saved = localStorage.getItem('dzikir_settings');
+    if (saved) {
+        appSettings = Object.assign(appSettings, JSON.parse(saved)); // Menggabungkan dengan default
+    }
+
+    const fontSelect = document.getElementById('font-select');
+    const clockFormatSelect = document.getElementById('clock-format');
+    const toggleLatin = document.getElementById('toggle-latin');
+    const toggleTerjemah = document.getElementById('toggle-terjemah');
+
+    if (fontSelect) fontSelect.value = appSettings.font;
+    if (clockFormatSelect) clockFormatSelect.value = appSettings.clockFormat;
+    if (toggleLatin) toggleLatin.checked = appSettings.showLatin;
+    if (toggleTerjemah) toggleTerjemah.checked = appSettings.showTerjemah;
+
+    applySettings();
+}
+
+function updateSettings() {
+    appSettings.font = document.getElementById('font-select').value;
+    appSettings.clockFormat = document.getElementById('clock-format').value;
+    appSettings.showLatin = document.getElementById('toggle-latin').checked;
+    appSettings.showTerjemah = document.getElementById('toggle-terjemah').checked;
+    localStorage.setItem('dzikir_settings', JSON.stringify(appSettings));
+    applySettings();
+}
+
+function changeFontSize(step) {
+    appSettings.arabicSize += step;
+
+    // Memberikan batasan ukuran font (min 1.5rem, max 4.5rem)
+    if (appSettings.arabicSize < 1.5) appSettings.arabicSize = 1.5;
+    if (appSettings.arabicSize > 4.5) appSettings.arabicSize = 4.5;
+
+    updateSettings();
+}
+
+function applySettings() {
+    document.body.classList.remove('font-hafs', 'font-naskh');
+    document.body.classList.add('font-' + appSettings.font);
+
+    // Menerapkan ukuran font arabic ke variabel CSS global
+    document.documentElement.style.setProperty('--arabic-font-size', appSettings.arabicSize + 'rem');
+
+    if (appSettings.showLatin) {
+        document.body.classList.remove('hide-latin');
+    } else {
+        document.body.classList.add('hide-latin');
+    }
+
+    if (appSettings.showTerjemah) {
+        document.body.classList.remove('hide-terjemah');
+    } else {
+        document.body.classList.add('hide-terjemah');
+    }
+
+    setTimeout(() => {
+        if(document.getElementById('dzikir-view').classList.contains('active')) {
+            const track = document.getElementById('slider-track');
+            const activeCard = document.querySelectorAll('.slide-card')[currentSlideIndex];
+            if (activeCard && track) track.style.height = activeCard.offsetHeight + 'px';
+        }
+    }, 100); // Waktu di tambah sedikit untuk memastikan transisi font-size selesai sebelum mengambil tinggi card
+}
+
+// Menambahkan parameter forceExpand untuk menghindari panel terbuka saat tombol back diklik
+function switchTab(tab, forceExpand = true) {
+    document.getElementById('tab-info').classList.remove('active');
+    document.getElementById('tab-settings').classList.remove('active');
+    document.getElementById('content-info').style.display = 'none';
+    document.getElementById('content-settings').style.display = 'none';
+
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('content-' + tab).style.display = 'block';
+
+    if (forceExpand) {
+        const infoSheet = document.getElementById('info-sheet');
+        if (!infoSheet.classList.contains('expanded')) {
+            infoSheet.classList.add('expanded');
+            checkOverlay();
+        }
+    }
+}
+
+function openSettings() {
+    const infoSheet = document.getElementById('info-sheet');
+
+    // Sembunyikan tab info developer saat setting dibuka dari konten dzikir
+    document.getElementById('tab-info').style.display = 'none';
+
+    infoSheet.style.display = 'flex';
+    void infoSheet.offsetWidth; // Memaksa perenderan ulang DOM sebelum menganimasikan tampilan
+
+    switchTab('settings');
 }
 
 window.addEventListener('resize', () => {

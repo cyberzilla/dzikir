@@ -8,7 +8,8 @@ const urlsToCache = [
     './manifest.json',
     './icon-192.png',
     './icon-512.png',
-    './hafs.woff2'
+    './hafs.woff2',
+    './naskh.woff2'
 ];
 
 // Event Install: Menyimpan file ke dalam Cache
