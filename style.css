@@ -14,8 +14,26 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'saleem';
+    src: url('./saleem.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'scheherazade';
+    src: url('./scheherazade.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 body.font-hafs .arabic { font-family: 'hafs', serif; }
 body.font-naskh .arabic { font-family: 'naskh', serif; }
+body.font-saleem .arabic { font-family: 'saleem', serif; }
+body.font-scheherazade .arabic { font-family: 'scheherazade', serif; }
 
 .hide-latin .latin-section { display: none !important; }
 .hide-terjemah .terjemah-section { display: none !important; }

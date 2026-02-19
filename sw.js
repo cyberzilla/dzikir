@@ -9,7 +9,9 @@ const urlsToCache = [
     './icon-192.png',
     './icon-512.png',
     './hafs.woff2',
-    './naskh.woff2'
+    './naskh.woff2',
+    './saleem.woff2',
+    './scheherazade.woff2'
 ];
 
 // Event Install: Menyimpan file ke dalam Cache

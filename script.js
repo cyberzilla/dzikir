@@ -568,7 +568,7 @@ function changeFontSize(step) {
 }
 
 function applySettings() {
-    document.body.classList.remove('font-hafs', 'font-naskh');
+    document.body.classList.remove('font-hafs', 'font-naskh','font-saleem','font-scheherazade');
     document.body.classList.add('font-' + appSettings.font);
 
     // Menerapkan ukuran font arabic ke variabel CSS global
