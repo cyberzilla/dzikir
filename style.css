@@ -425,7 +425,7 @@ body {
 
 .arabic {
     font-size: var(--arabic-font-size);
-    text-align: right;
+    text-align: center;
     line-height: 2.1;
     color: var(--text-main);
     margin-bottom: 25px;
