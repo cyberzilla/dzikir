@@ -173,6 +173,17 @@
             <div class="ref-box" id="sheet-ref"></div>
         </div>
     </div>
+
+    <div id="custom-alert" class="custom-alert-overlay" onclick="closeCustomAlert(event)">
+        <div class="custom-alert-box" onclick="event.stopPropagation()">
+            <div class="custom-alert-icon">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <h3 id="custom-alert-title">Informasi</h3>
+            <p id="custom-alert-msg">Pesan alert di sini</p>
+            <button class="custom-alert-btn" onclick="closeCustomAlert()">OK</button>
+        </div>
+    </div>
 </div>
 <script src="script.js"></script>
 </body>

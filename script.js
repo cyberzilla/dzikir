@@ -46,8 +46,19 @@ async function initApp() {
         restoreState();
     } catch (error) {
         console.error("Data JSON tidak ditemukan", error);
-        alert("Gagal memuat dzikir.json.");
+        showCustomAlert("Error", "Gagal memuat dzikir.json.");
     }
+}
+
+function showCustomAlert(title, message) {
+    document.getElementById('custom-alert-title').innerText = title;
+    document.getElementById('custom-alert-msg').innerText = message;
+    document.getElementById('custom-alert').classList.add('show');
+}
+
+function closeCustomAlert(e) {
+    if (e && e.target.id !== 'custom-alert' && e.type === 'click') return;
+    document.getElementById('custom-alert').classList.remove('show');
 }
 
 function startClock() {
@@ -393,7 +404,10 @@ function updateFAB() {
 function incrementCounter() {
     if (!isDzikirTime(activeSession)) {
         const timeText = activeSession === 'pagi' ? '03:00 s.d 11:59' : '15:00 s.d 20:59';
-        alert(`Saat ini belum masuk jam utama Dzikir ${activeSession.charAt(0).toUpperCase() + activeSession.slice(1)}.\n\n(Waktu anjuran: ${timeText})`);
+        showCustomAlert(
+            `Belum Waktunya`,
+            `Saat ini belum masuk jam utama Dzikir ${activeSession.charAt(0).toUpperCase() + activeSession.slice(1)}.\n\n(Waktu anjuran: ${timeText})`
+        );
         return;
     }
 
@@ -618,6 +632,7 @@ function resetFabPosition() {
     appSettings.fabPosition = null;
     localStorage.setItem('dzikir_settings', JSON.stringify(appSettings));
     applyFabPosition();
+    showCustomAlert("Berhasil", "Posisi tombol BACA telah dikembalikan ke titik tengah awal.");
 }
 
 function registerServiceWorker() {
