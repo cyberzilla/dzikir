@@ -51,7 +51,7 @@ async function initApp() {
         setTimeout(() => {
             const loader = document.getElementById('global-loader');
             if (loader) loader.classList.add('hidden');
-        }, 300);
+        }, 300); 
     }
 }
 
@@ -336,6 +336,34 @@ function isDzikirTime(session) {
     return true;
 }
 
+function updateProgressState() {
+    if (!currentSessionData.length) return;
+    
+    let totalTarget = 0;
+    let totalRead = 0;
+    
+    currentSessionData.forEach(item => {
+        totalTarget += item.target_baca;
+        let readCount = userProgress[activeSession][item.id] || 0;
+        totalRead += Math.min(readCount, item.target_baca);
+    });
+    
+    const progressPercent = totalTarget === 0 ? 0 : (totalRead / totalTarget) * 100;
+    const progressFill = document.getElementById('progress-fill');
+    if(progressFill) progressFill.style.width = progressPercent + '%';
+    
+    const isEndScreen = currentSlideIndex === currentSessionData.length;
+    const progressText = document.getElementById('progress-text');
+    
+    if(progressText) {
+        if (isEndScreen) {
+            progressText.innerHTML = `<span>STATUS</span> <span>SELESAI</span>`;
+        } else {
+            progressText.innerHTML = `<span>DZIKIR ${currentSlideIndex + 1} DARI ${currentSessionData.length}</span> <span>${Math.round(progressPercent)}%</span>`;
+        }
+    }
+}
+
 function updateUI() {
     if (!currentSessionData.length) return;
 
@@ -352,24 +380,21 @@ function updateUI() {
     if (activeCard) track.style.height = activeCard.offsetHeight + 'px';
 
     const isEndScreen = currentSlideIndex === currentSessionData.length;
-    const progressPercent = isEndScreen ? 100 : (currentSlideIndex / currentSessionData.length) * 100;
-    document.getElementById('progress-fill').style.width = progressPercent + '%';
+    
+    updateProgressState();
 
     const bottomSheet = document.getElementById('bottom-sheet');
     const fab = document.getElementById('btn-counter');
 
     if (isEndScreen) {
-        document.getElementById('progress-text').innerHTML = `<span>STATUS</span> <span>SELESAI</span>`;
         fab.classList.remove('visible');
         setTimeout(() => {
             if (currentSlideIndex === currentSessionData.length) fab.style.visibility = 'hidden';
         }, 300);
         bottomSheet.style.display = 'none';
     } else {
-        document.getElementById('progress-text').innerHTML = `<span>DZIKIR ${currentSlideIndex + 1} DARI ${currentSessionData.length}</span> <span>${Math.round(progressPercent)}%</span>`;
-
         fab.style.visibility = 'visible';
-
+        
         if (!fab.classList.contains('visible')) {
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
@@ -378,7 +403,7 @@ function updateUI() {
                 });
             });
         }
-
+        
         bottomSheet.style.display = 'flex';
 
         const activeItem = currentSessionData[currentSlideIndex];
@@ -429,7 +454,7 @@ function incrementCounter() {
     if (!isDzikirTime(activeSession)) {
         const timeText = activeSession === 'pagi' ? '03:00 s.d 11:59' : '15:00 s.d 20:59';
         showCustomAlert(
-            `Belum Waktunya`,
+            `Belum Waktunya`, 
             `Saat ini belum masuk jam utama Dzikir ${activeSession.charAt(0).toUpperCase() + activeSession.slice(1)}.\n\n(Waktu anjuran: ${timeText})`
         );
         return;
@@ -442,6 +467,7 @@ function incrementCounter() {
 
         if (navigator.vibrate) navigator.vibrate(40);
         updateFAB();
+        updateProgressState();
 
         const fab = document.getElementById('btn-counter');
         fab.classList.remove('pop-anim');
@@ -569,7 +595,7 @@ function setupFabDrag() {
     const onMove = (e) => {
         if (e.type === 'mousemove' && ignoreMouseFab) return;
         if (!isFabDragging) return;
-
+        
         const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
         const currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
 
@@ -631,7 +657,7 @@ function setupFabDrag() {
 
 function applyFabPosition() {
     const fab = document.getElementById('btn-counter');
-
+    
     fab.style.transition = 'none';
     fab.classList.remove('visible');
 
