@@ -86,8 +86,10 @@
         </div>
         <div class="bottom-nav">
             <button class="nav-btn" id="btn-prev" onclick="prevSlide()" disabled>❮</button>
-            <button class="counter-fab" id="btn-counter" onclick="incrementCounter()">
-                <span id="btn-main-text">BACA</span>
+            <button class="counter-fab" id="btn-counter">
+                <span id="btn-main-text">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </span>
                 <span class="count-label" id="btn-sub-text">0 dari 0</span>
             </button>
             <button class="nav-btn" id="btn-next" onclick="nextSlide()">❯</button>
@@ -105,7 +107,6 @@
                 </button>
             </div>
         </div>
-
         <div class="sheet-content" id="content-info" style="text-align: center; padding-top: 5px; padding-bottom: 30px;">
             <h3 class="sheet-title" style="margin-bottom: 15px;">Tentang Aplikasi</h3>
             <p style="font-size: 0.9rem; margin-bottom: 25px; line-height: 1.6;">
@@ -115,7 +116,6 @@
                 Lihat di GitHub
             </a>
         </div>
-
         <div class="sheet-content" id="content-settings" style="display: none; padding-top: 5px; padding-bottom: 30px;">
             <h3 class="sheet-title" style="margin-bottom: 15px; text-align: center;">Pengaturan</h3>
             <div class="setting-item">
@@ -155,6 +155,10 @@
                     <option value="24">24 Jam</option>
                     <option value="12">12 Jam (AM/PM)</option>
                 </select>
+            </div>
+            <div class="setting-item">
+                <label>Reset Posisi Tombol Baca</label>
+                <button onclick="resetFabPosition()" style="padding: 6px 15px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">Reset Posisi</button>
             </div>
         </div>
     </div>

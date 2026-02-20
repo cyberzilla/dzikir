@@ -83,6 +83,7 @@ body {
     scrollbar-width: none;
     -webkit-user-select: none;
     user-select: none;
+    overscroll-behavior-y: none;
 }
 
 ::-webkit-scrollbar { display: none; }
@@ -499,23 +500,71 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     background: var(--primary);
     color: white;
     border: none;
-    height: 50px;
-    min-width: 130px;
-    border-radius: 25px;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
     font-size: 1rem;
-    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     line-height: 1.2;
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    z-index: 110;
+    touch-action: none;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    gap: 2px;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+    transition: background 0.2s ease, filter 0.2s ease, opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
 }
 
-.counter-fab:active { transform: scale(0.92); filter: brightness(0.9); }
-.counter-fab.done { background: var(--text-muted); cursor: default; box-shadow: none; }
-.counter-fab .count-label { font-size: 0.7rem; font-weight: 500; opacity: 0.9; }
+.counter-fab.visible {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    pointer-events: auto;
+}
+
+.counter-fab.dragged.visible {
+    transform: scale(1);
+}
+
+.counter-fab #btn-main-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.counter-fab:active {
+    filter: brightness(0.85);
+}
+
+.counter-fab.dragged {
+    transform: none;
+    bottom: auto;
+}
+
+.counter-fab.done {
+    background: var(--text-muted);
+    cursor: default;
+    box-shadow: none;
+}
+
+.counter-fab.disabled-time {
+    background: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.counter-fab .count-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    opacity: 0.9;
+}
 
 .sheet-overlay {
     position: fixed;
@@ -625,6 +674,20 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
 
 .pop-anim { animation: popSuccess 0.4s ease forwards; }
 
+@keyframes fabPopCenter {
+    0% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.15); }
+    100% { transform: translateX(-50%) scale(1); }
+}
+
+.counter-fab.pop-anim:not(.dragged) {
+    animation: fabPopCenter 0.3s ease forwards;
+}
+
+.counter-fab.pop-anim.dragged {
+    animation: popSuccess 0.3s ease forwards;
+}
+
 .success-screen { text-align: center; padding: 60px 20px; }
 .success-icon { font-size: 5rem; margin-bottom: 20px; display: inline-block; animation: popSuccess 0.6s ease forwards; }
 
@@ -681,17 +744,12 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     100% { opacity: 0; transform: scale(0.5); }
 }
 
-/* ========================================= */
-/* Penyesuaian Style Tab dan Info Sheet Dinamis */
-/* ========================================= */
-
 #info-sheet {
     z-index: 130;
     background: #1e293b;
     border-top: 1px solid #334155;
 }
 
-/* Warna elemen default di Home Screen (Gelap) */
 #info-sheet p, #info-sheet .setting-item label {
     color: #f8fafc !important;
 }
@@ -702,7 +760,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     border-bottom: 1px solid #334155;
 }
 
-/* Base style Select Inputs untuk Home (Gelap) */
 #info-sheet #font-select, #info-sheet #clock-format {
     background-color: #1e293b;
     color: #f8fafc;
@@ -715,7 +772,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     min-width: 100px;
 }
 
-/* Style tombol kontrol font size */
 .font-controls {
     display: flex;
     align-items: center;
@@ -740,7 +796,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     transform: scale(0.9);
 }
 
-/* Override saat masuk ke mode baca (Pagi/Petang) sehingga mengikuti variabel tema saat ini */
 body.theme-pagi #info-sheet, body.theme-petang #info-sheet {
     background: var(--nav-bg);
     border-top: 1px solid var(--border-color);
@@ -756,7 +811,6 @@ body.theme-pagi #info-sheet .setting-item, body.theme-petang #info-sheet .settin
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Memastikan Select, Clock format, dan Font Size Controls di mode Pagi/Petang merender warna yang tepat dan terlihat (terutama saat petang) */
 body.theme-pagi #info-sheet #font-select, body.theme-petang #info-sheet #font-select,
 body.theme-pagi #info-sheet #clock-format, body.theme-petang #info-sheet #clock-format,
 body.theme-pagi #info-sheet .font-size-btn, body.theme-petang #info-sheet .font-size-btn {
@@ -765,7 +819,6 @@ body.theme-pagi #info-sheet .font-size-btn, body.theme-petang #info-sheet .font-
     border: 1px solid var(--border-color);
 }
 
-/* Styling Tabs di tengah vertikal & horizontal */
 .sheet-tabs {
     display: flex;
     justify-content: center;

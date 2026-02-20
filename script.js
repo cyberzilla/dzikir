@@ -12,12 +12,20 @@ let appSettings = {
     font: 'hafs',
     showLatin: true,
     showTerjemah: true,
-    clockFormat: '24', // default format
-    arabicSize: 2 // ukuran font default dalam rem
+    clockFormat: '24',
+    arabicSize: 2,
+    fabPosition: null
 };
 
+let isFabDragging = false;
+let fabHasMoved = false;
+
+const iconBook = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`;
+const iconCheck = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+const iconClock = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+
 async function initApp() {
-    loadSettings(); // Memuat pengaturan terlebih dahulu agar jam dirender dengan format yang tepat sejak detik awal
+    loadSettings();
     startClock();
     checkAndResetDailyProgress();
     registerServiceWorker();
@@ -33,10 +41,12 @@ async function initApp() {
         setupSheetDrag('bottom-sheet', 'drag-area');
         setupSheetDrag('info-sheet', 'info-drag-area');
 
+        setupFabDrag();
+
         restoreState();
     } catch (error) {
-        console.error("Data JSON tidak ditemukan atau gagal dimuat.", error);
-        alert("Gagal memuat dzikir.json. Pastikan dijalankan melalui Local Server.");
+        console.error("Data JSON tidak ditemukan", error);
+        alert("Gagal memuat dzikir.json.");
     }
 }
 
@@ -44,7 +54,6 @@ function startClock() {
     setInterval(() => {
         const now = new Date();
 
-        // Memformat jam sesuai dengan pengaturan (12 atau 24 jam)
         let h = now.getHours();
         let m = now.getMinutes();
         let ampm = '';
@@ -52,9 +61,9 @@ function startClock() {
         if (appSettings.clockFormat === '12') {
             ampm = h >= 12 ? ' PM' : ' AM';
             h = h % 12;
-            h = h ? h : 12; // Jam '0' menjadi '12'
+            h = h ? h : 12;
         } else {
-            h = h < 10 ? '0' + h : h; // Menambahkan '0' padding jika 24 jam
+            h = h < 10 ? '0' + h : h;
         }
 
         m = m < 10 ? '0' + m : m;
@@ -142,10 +151,8 @@ function closeDzikir() {
 
     closeAllSheets();
 
-    // Munculkan kembali icon kopi (Info Developer) saat kembali ke halaman depan
     document.getElementById('tab-info').style.display = '';
 
-    // FALSE: tidak memaksa panel terbuka saat pindah tab info kembali
     switchTab('info', false);
 
     document.getElementById('bottom-sheet').style.display = 'none';
@@ -167,14 +174,12 @@ function checkOverlay() {
         overlay.classList.remove('active');
     }
 
-    // Mengatur z-index overlay agar bisa menggelapkan dalil jika setting terbuka
     if (infoExpanded) {
         overlay.style.zIndex = '125';
     } else {
         overlay.style.zIndex = '115';
     }
 
-    // Hilangkan panel setting/info sepenuhnya saat ditutup di halaman Dzikir (mencegah tab button tumpang tindih)
     if (!infoExpanded) {
         setTimeout(() => {
             if (document.getElementById('dzikir-view').classList.contains('active') && !document.getElementById('info-sheet').classList.contains('expanded')) {
@@ -290,6 +295,16 @@ function setupTouchEvents() {
     viewport.addEventListener('touchend', onEnd);
 }
 
+function isDzikirTime(session) {
+    const hour = new Date().getHours();
+    if (session === 'pagi') {
+        return hour >= 3 && hour <= 11;
+    } else if (session === 'petang') {
+        return hour >= 15 && hour <= 20;
+    }
+    return true;
+}
+
 function updateUI() {
     if (!currentSessionData.length) return;
 
@@ -342,18 +357,35 @@ function updateFAB() {
     const fab = document.getElementById('btn-counter');
 
     fab.classList.remove('pop-anim');
+
+    if (!isDzikirTime(activeSession)) {
+        document.getElementById('btn-main-text').innerHTML = iconClock;
+        document.getElementById('btn-sub-text').innerText = "Tunggu";
+        fab.classList.add('disabled-time');
+        fab.classList.remove('done');
+        return;
+    } else {
+        fab.classList.remove('disabled-time');
+    }
+
     if (count >= item.target_baca) {
-        document.getElementById('btn-main-text').innerText = "✓ SELESAI";
-        document.getElementById('btn-sub-text').innerText = "Lanjut Berikutnya";
+        document.getElementById('btn-main-text').innerHTML = iconCheck;
+        document.getElementById('btn-sub-text').innerText = "Selesai";
         fab.classList.add('done');
     } else {
-        document.getElementById('btn-main-text').innerText = "BACA";
+        document.getElementById('btn-main-text').innerHTML = iconBook;
         document.getElementById('btn-sub-text').innerText = `${count} dari ${item.target_baca}`;
         fab.classList.remove('done');
     }
 }
 
 function incrementCounter() {
+    if (!isDzikirTime(activeSession)) {
+        const timeText = activeSession === 'pagi' ? '03:00 s.d 11:59' : '15:00 s.d 20:59';
+        alert(`Saat ini belum masuk jam utama Dzikir ${activeSession.charAt(0).toUpperCase() + activeSession.slice(1)}.\n\n(Waktu anjuran: ${timeText})`);
+        return;
+    }
+
     const item = currentSessionData[currentSlideIndex];
     if (userProgress[activeSession][item.id] < item.target_baca) {
         userProgress[activeSession][item.id]++;
@@ -433,11 +465,9 @@ function setupSheetDrag(sheetId, dragAreaId) {
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
 
-        // Mencegah interaksi drag dan klik agar tidak bertabrakan
         const isBtn = e.target.closest('button') || e.target.closest('a') || e.target.closest('svg');
 
         if (Math.abs(diff) < 15) {
-            // Jika diklik dan area tersebut bukan tombol tab
             if (!isBtn) {
                 sheet.classList.toggle('expanded');
             }
@@ -456,6 +486,106 @@ function setupSheetDrag(sheetId, dragAreaId) {
     dragArea.addEventListener('touchstart', onStartSheet, { passive: true });
     document.addEventListener('touchmove', onMoveSheet, { passive: false });
     document.addEventListener('touchend', onEndSheet);
+}
+
+function setupFabDrag() {
+    const fab = document.getElementById('btn-counter');
+    let startX, startY, initialLeft, initialTop;
+
+    const onStart = (e) => {
+        isFabDragging = true;
+        fabHasMoved = false;
+        startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        startY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
+
+        const rect = fab.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+    };
+
+    const onMove = (e) => {
+        if (!isFabDragging) return;
+        const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        const currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
+
+        const diffX = currentX - startX;
+        const diffY = currentY - startY;
+
+        if (!fabHasMoved && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)) {
+            fabHasMoved = true;
+            fab.style.transition = 'none';
+            fab.classList.add('dragged');
+        }
+
+        if (fabHasMoved) {
+            let newLeft = initialLeft + diffX;
+            let newTop = initialTop + diffY;
+
+            const maxX = window.innerWidth - fab.offsetWidth;
+            const maxY = window.innerHeight - fab.offsetHeight;
+
+            newLeft = Math.max(0, Math.min(newLeft, maxX));
+            newTop = Math.max(0, Math.min(newTop, maxY));
+
+            fab.style.left = newLeft + 'px';
+            fab.style.top = newTop + 'px';
+
+            if (e.cancelable) e.preventDefault();
+        }
+    };
+
+    const onEnd = (e) => {
+        if (!isFabDragging) return;
+        isFabDragging = false;
+
+        if (fabHasMoved) {
+            appSettings.fabPosition = {
+                left: fab.style.left,
+                top: fab.style.top
+            };
+            localStorage.setItem('dzikir_settings', JSON.stringify(appSettings));
+            fab.style.transition = '';
+        } else {
+            incrementCounter();
+        }
+    };
+
+    fab.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', onMove, { passive: false });
+    document.addEventListener('mouseup', onEnd);
+
+    fab.addEventListener('touchstart', onStart, { passive: true });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+}
+
+function applyFabPosition() {
+    const fab = document.getElementById('btn-counter');
+    fab.style.transition = 'none';
+
+    if (appSettings.fabPosition) {
+        fab.classList.add('dragged');
+        fab.style.left = appSettings.fabPosition.left;
+        fab.style.top = appSettings.fabPosition.top;
+    } else {
+        fab.classList.remove('dragged');
+        fab.style.left = '50%';
+        fab.style.top = 'auto';
+        fab.style.bottom = '50px';
+    }
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            fab.style.transition = '';
+            fab.classList.add('visible');
+        });
+    });
+}
+
+function resetFabPosition() {
+    appSettings.fabPosition = null;
+    localStorage.setItem('dzikir_settings', JSON.stringify(appSettings));
+    applyFabPosition();
 }
 
 function registerServiceWorker() {
@@ -532,7 +662,7 @@ function createStars() {
 function loadSettings() {
     const saved = localStorage.getItem('dzikir_settings');
     if (saved) {
-        appSettings = Object.assign(appSettings, JSON.parse(saved)); // Menggabungkan dengan default
+        appSettings = Object.assign(appSettings, JSON.parse(saved));
     }
 
     const fontSelect = document.getElementById('font-select');
@@ -546,6 +676,7 @@ function loadSettings() {
     if (toggleTerjemah) toggleTerjemah.checked = appSettings.showTerjemah;
 
     applySettings();
+    applyFabPosition();
 }
 
 function updateSettings() {
@@ -560,7 +691,6 @@ function updateSettings() {
 function changeFontSize(step) {
     appSettings.arabicSize += step;
 
-    // Memberikan batasan ukuran font (min 1.5rem, max 4.5rem)
     if (appSettings.arabicSize < 1.5) appSettings.arabicSize = 1.5;
     if (appSettings.arabicSize > 4.5) appSettings.arabicSize = 4.5;
 
@@ -571,7 +701,6 @@ function applySettings() {
     document.body.classList.remove('font-hafs', 'font-naskh','font-saleem','font-scheherazade');
     document.body.classList.add('font-' + appSettings.font);
 
-    // Menerapkan ukuran font arabic ke variabel CSS global
     document.documentElement.style.setProperty('--arabic-font-size', appSettings.arabicSize + 'rem');
 
     if (appSettings.showLatin) {
@@ -592,10 +721,9 @@ function applySettings() {
             const activeCard = document.querySelectorAll('.slide-card')[currentSlideIndex];
             if (activeCard && track) track.style.height = activeCard.offsetHeight + 'px';
         }
-    }, 100); // Waktu di tambah sedikit untuk memastikan transisi font-size selesai sebelum mengambil tinggi card
+    }, 100);
 }
 
-// Menambahkan parameter forceExpand untuk menghindari panel terbuka saat tombol back diklik
 function switchTab(tab, forceExpand = true) {
     document.getElementById('tab-info').classList.remove('active');
     document.getElementById('tab-settings').classList.remove('active');
@@ -617,11 +745,10 @@ function switchTab(tab, forceExpand = true) {
 function openSettings() {
     const infoSheet = document.getElementById('info-sheet');
 
-    // Sembunyikan tab info developer saat setting dibuka dari konten dzikir
     document.getElementById('tab-info').style.display = 'none';
 
     infoSheet.style.display = 'flex';
-    void infoSheet.offsetWidth; // Memaksa perenderan ulang DOM sebelum menganimasikan tampilan
+    void infoSheet.offsetWidth;
 
     switchTab('settings');
 }
