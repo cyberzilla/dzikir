@@ -239,8 +239,12 @@ function setupTouchEvents() {
     const viewport = document.getElementById('slider-viewport');
     let startY = 0;
     let isScrolling = null;
+    let ignoreMouseSwipe = false;
 
     const onStart = (e) => {
+        if (e.type === 'touchstart') ignoreMouseSwipe = true;
+        if (e.type === 'mousedown' && ignoreMouseSwipe) return;
+
         isDragging = true;
         isScrolling = null;
         startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
@@ -252,6 +256,7 @@ function setupTouchEvents() {
     };
 
     const onMove = (e) => {
+        if (e.type === 'mousemove' && ignoreMouseSwipe) return;
         if (!isDragging) return;
         const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
         const currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
@@ -270,8 +275,14 @@ function setupTouchEvents() {
     };
 
     const onEnd = (e) => {
+        if (e.type === 'mouseup' && ignoreMouseSwipe) return;
         if (!isDragging) return;
         isDragging = false;
+
+        if (e.type === 'touchend') {
+            setTimeout(() => { ignoreMouseSwipe = false; }, 300);
+        }
+
         if (isScrolling) { isScrolling = null; return; }
 
         const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
@@ -435,14 +446,19 @@ function setupSheetDrag(sheetId, dragAreaId) {
     let startY = 0;
     let currentY = 0;
     let isDraggingSheet = false;
+    let ignoreMouseSheet = false;
 
     const onStartSheet = (e) => {
+        if (e.type === 'touchstart') ignoreMouseSheet = true;
+        if (e.type === 'mousedown' && ignoreMouseSheet) return;
+
         isDraggingSheet = true;
         startY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
         sheet.style.transition = 'none';
     };
 
     const onMoveSheet = (e) => {
+        if (e.type === 'mousemove' && ignoreMouseSheet) return;
         if (!isDraggingSheet) return;
         if (e.cancelable) e.preventDefault();
 
@@ -458,9 +474,14 @@ function setupSheetDrag(sheetId, dragAreaId) {
     };
 
     const onEndSheet = (e) => {
+        if (e.type === 'mouseup' && ignoreMouseSheet) return;
         if (!isDraggingSheet) return;
         isDraggingSheet = false;
         sheet.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+
+        if (e.type === 'touchend') {
+            setTimeout(() => { ignoreMouseSheet = false; }, 300);
+        }
 
         const diff = currentY - startY;
         const isExpanded = sheet.classList.contains('expanded');
@@ -491,8 +512,12 @@ function setupSheetDrag(sheetId, dragAreaId) {
 function setupFabDrag() {
     const fab = document.getElementById('btn-counter');
     let startX, startY, initialLeft, initialTop;
+    let ignoreMouseFab = false;
 
     const onStart = (e) => {
+        if (e.type === 'touchstart') ignoreMouseFab = true;
+        if (e.type === 'mousedown' && ignoreMouseFab) return;
+
         isFabDragging = true;
         fabHasMoved = false;
         startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
@@ -504,7 +529,9 @@ function setupFabDrag() {
     };
 
     const onMove = (e) => {
+        if (e.type === 'mousemove' && ignoreMouseFab) return;
         if (!isFabDragging) return;
+
         const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
         const currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
 
@@ -535,6 +562,7 @@ function setupFabDrag() {
     };
 
     const onEnd = (e) => {
+        if (e.type === 'mouseup' && ignoreMouseFab) return;
         if (!isFabDragging) return;
         isFabDragging = false;
 
@@ -547,6 +575,10 @@ function setupFabDrag() {
             fab.style.transition = '';
         } else {
             incrementCounter();
+        }
+
+        if (e.type === 'touchend') {
+            setTimeout(() => { ignoreMouseFab = false; }, 300);
         }
     };
 

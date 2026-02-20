@@ -672,8 +672,6 @@ body.theme-petang .section-label { background: rgba(59, 130, 246, 0.1); }
     100% { transform: scale(1); }
 }
 
-.pop-anim { animation: popSuccess 0.4s ease forwards; }
-
 @keyframes fabPopCenter {
     0% { transform: translateX(-50%) scale(1); }
     50% { transform: translateX(-50%) scale(1.15); }
