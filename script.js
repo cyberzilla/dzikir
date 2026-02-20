@@ -47,6 +47,11 @@ async function initApp() {
     } catch (error) {
         console.error("Data JSON tidak ditemukan", error);
         showCustomAlert("Error", "Gagal memuat dzikir.json.");
+    } finally {
+        setTimeout(() => {
+            const loader = document.getElementById('global-loader');
+            if (loader) loader.classList.add('hidden');
+        }, 300);
     }
 }
 
@@ -136,6 +141,8 @@ function openDzikir(session, targetIndex = 0) {
     document.body.className = 'theme-' + session;
     applySettings();
 
+    applyFabPosition();
+
     const headerTitle = session === 'pagi' ? 'Dzikir Pagi' : 'Dzikir Petang';
     document.getElementById('dzikir-header-title').innerText = headerTitle;
 
@@ -155,6 +162,8 @@ function openDzikir(session, targetIndex = 0) {
 }
 
 function closeDzikir() {
+    document.getElementById('btn-counter').classList.remove('visible');
+
     document.getElementById('dzikir-view').classList.remove('active');
     document.getElementById('home-view').classList.add('active');
     document.body.className = '';
@@ -347,14 +356,29 @@ function updateUI() {
     document.getElementById('progress-fill').style.width = progressPercent + '%';
 
     const bottomSheet = document.getElementById('bottom-sheet');
+    const fab = document.getElementById('btn-counter');
 
     if (isEndScreen) {
         document.getElementById('progress-text').innerHTML = `<span>STATUS</span> <span>SELESAI</span>`;
-        document.getElementById('btn-counter').style.visibility = 'hidden';
+        fab.classList.remove('visible');
+        setTimeout(() => {
+            if (currentSlideIndex === currentSessionData.length) fab.style.visibility = 'hidden';
+        }, 300);
         bottomSheet.style.display = 'none';
     } else {
         document.getElementById('progress-text').innerHTML = `<span>DZIKIR ${currentSlideIndex + 1} DARI ${currentSessionData.length}</span> <span>${Math.round(progressPercent)}%</span>`;
-        document.getElementById('btn-counter').style.visibility = 'visible';
+
+        fab.style.visibility = 'visible';
+
+        if (!fab.classList.contains('visible')) {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    fab.style.transition = '';
+                    fab.classList.add('visible');
+                });
+            });
+        }
+
         bottomSheet.style.display = 'flex';
 
         const activeItem = currentSessionData[currentSlideIndex];
@@ -607,7 +631,9 @@ function setupFabDrag() {
 
 function applyFabPosition() {
     const fab = document.getElementById('btn-counter');
+
     fab.style.transition = 'none';
+    fab.classList.remove('visible');
 
     if (appSettings.fabPosition) {
         fab.classList.add('dragged');
@@ -619,19 +645,21 @@ function applyFabPosition() {
         fab.style.top = 'auto';
         fab.style.bottom = '50px';
     }
-
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            fab.style.transition = '';
-            fab.classList.add('visible');
-        });
-    });
 }
 
 function resetFabPosition() {
     appSettings.fabPosition = null;
     localStorage.setItem('dzikir_settings', JSON.stringify(appSettings));
     applyFabPosition();
+
+    const fab = document.getElementById('btn-counter');
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            fab.style.transition = '';
+            fab.classList.add('visible');
+        });
+    });
+
     showCustomAlert("Berhasil", "Posisi tombol BACA telah dikembalikan ke titik tengah awal.");
 }
 
